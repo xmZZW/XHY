@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SqlCommand>
+  <!--订单 -->
+  <Command ID="SelectOrder">
+    <CommandString>
+      select main.*,cust.CustomerName,Rout.RouteName,SUBSTRING(main.BATCHNO,7,3) as SubBatchNo from SC_I_ORDERMASTER main
+      left join CMD_Customer cust on main.CustomerCode=cust.CustomerCode
+      left join CMD_Route Rout on main.RouteCode=rout.RouteCode
+      where {0}
+      order by {1}
+    </CommandString>
+  </Command>
+
+  <Command ID="InsertOrder">
+    <CommandString>
+      insert into SC_I_ORDERMASTER(OrderDate, DeliveryDate, BatchNo, OrderId, RouteCode, CustomerCode, DeliveryAdd, Creator, CreateDate, Updater, UpdateDate)
+      values(@OrderDate, @DeliveryDate, @BatchNo, @OrderId, @RouteCode, @CustomerCode, @DeliveryAdd, @Creator, getdate(), @Updater, getdate())
+    </CommandString>
+  </Command>
+
+  <Command ID="UpdateOrder">
+    <CommandString>
+      update SC_I_ORDERMASTER set OrderDate=@OrderDate, DeliveryDate=@DeliveryDate, BatchNo=@BatchNo, RouteCode=@RouteCode, CustomerCode=@CustomerCode, DeliveryAdd=@DeliveryAdd,Updater=@Updater, UpdateDate=getdate() where OrderId=@OrderID
+    </CommandString>
+  </Command>
+
+  <Command ID="DeleteOrder">
+    <CommandString>
+      delete from  SC_I_ORDERMASTER  where OrderId in ({0})
+    </CommandString>
+  </Command>
+
+  <Command ID="SelectOrderDetail">
+    <CommandString>
+      select * from SC_I_ORDERDETAIL
+      where {0}
+      order by RowID
+    </CommandString>
+  </Command>
+
+  <Command ID="InsertOrderDetail">
+    <CommandString>
+      insert into SC_I_ORDERDETAIL( OrderId, RowID, ProductCode, ProductName, Quantity, OrderDate, DeliveryDate, BatchNo, Price, Amount, Memo)
+      values(@OrderId, @RowID, @ProductCode, @ProductName, @Quantity, @OrderDate, @DeliveryDate, @BatchNo, @Price, @Amount, @Memo)
+    </CommandString>
+  </Command>
+
+  <Command ID="DeleteOrderDetail">
+    <CommandString>
+      delete from  SC_I_ORDERDETAIL  where OrderId in ({0})
+    </CommandString>
+  </Command>
+
+</SqlCommand>

@@ -1,0 +1,234 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SqlCommand>
+  <!--产品类别-->
+  <Command ID="SelectProductCategory">
+    <CommandString>
+      select *
+      from CMD_ProductCategory  
+      where {0} order by {1}
+    </CommandString>
+  </Command>
+
+  <Command ID="InsertProductCategory">
+    <CommandString>
+      insert into CMD_ProductCategory(CategoryCode,CategoryName,Memo,Creator,CreateDate,Updater,UpdateDate)
+      values(@CategoryCode,@CategoryName,@Memo,@Creator,getdate(),@Updater,getdate())
+    </CommandString>
+  </Command>
+
+  <Command ID="UpdateProductCategory">
+    <CommandString>
+      update CMD_ProductCategory set CategoryName=@CategoryName,Memo=@Memo,Updater=@Updater,UpdateDate=getdate() where CategoryCode=@CategoryCode
+    </CommandString>
+  </Command>
+  <Command ID="DeleteProductCategory">
+    <CommandString>
+      delete from CMD_ProductCategory where CategoryCode in({0})
+    </CommandString>
+  </Command>
+
+  <!--库区资料-->
+  <Command ID="SelectArea">
+    <CommandString>
+      Select * from CMD_Area where {0} order by {1}
+    </CommandString>
+  </Command>
+  <Command ID="DeleteArea">
+    <CommandString>
+      delete from CMD_Area WHERE AreaCode in({0})
+    </CommandString>
+  </Command>
+  <Command ID="InsertArea">
+    <CommandString>
+      INSERT INTO CMD_Area(AreaCode,AreaName,SortId, Creator, CreateDate, Updater, UpdateDate)
+      values(@AreaCode,@AreaName,@SortId, @Creator, getdate(), @Updater, getdate())
+    </CommandString>
+  </Command>
+  <Command ID="UpdateArea">
+    <CommandString>
+      Update CMD_Area Set AreaName=@AreaName,SortId=@SortId,Updater=@Updater, UpdateDate=getdate() where AreaCode=@AreaCode
+    </CommandString>
+  </Command>
+
+  <!--路线资料-->
+  <Command ID="SelectRoute">
+    <CommandString>
+      select Route.*,Area.AreaName from CMD_Route Route
+      left join CMD_Area Area on Route.AreaCode=Area.AreaCode
+      where {0} order by {1}
+    </CommandString>
+  </Command>
+  <Command ID="DeleteRoute">
+    <CommandString>
+      delete from CMD_Route WHERE RouteCode in({0})
+    </CommandString>
+  </Command>
+  <Command ID="InsertRoute">
+    <CommandString>
+      INSERT INTO CMD_Route(RouteCode, RouteName, VehicleSign, VehicleName, VehicleType, DeliveryMan, AreaCode, SortId, IsSort, Creator, CreateDate, Updater, UpdateDate)
+      values(@RouteCode, @RouteName, @VehicleSign, @VehicleName, @VehicleType, @DeliveryMan, @AreaCode, @SortId, @IsSort,@Creator, getdate(), @Updater, getdate())
+    </CommandString>
+  </Command>
+  <Command ID="UpdateRoute">
+    <CommandString>
+      Update CMD_Route set RouteName=@RouteName, VehicleSign=@VehicleSign, VehicleName=@VehicleName, VehicleType=@VehicleType, DeliveryMan=@DeliveryMan, AreaCode=@AreaCode, SortId=@SortId, IsSort=@IsSort, Updater=@Updater, UpdateDate=getdate() where RouteCode=@RouteCode
+    </CommandString>
+  </Command>
+
+
+  <!--客户资料-->
+  <Command ID="SelectCustomer">
+    <CommandString>
+      Select *
+      from V_CMD_CUSTOMER
+      where {0}
+      order by {1}
+    </CommandString>
+  </Command>
+  <Command ID="DeleteCustomer">
+    <CommandString>
+      delete from CMD_Customer WHERE CustomerCode in({0})
+    </CommandString>
+  </Command>
+  <Command ID="InsertCustomer">
+    <CommandString>
+      INSERT INTO CMD_Customer(CustomerCode, CustomerDesc, CustomerName, RouteCode, LicenseNo, SortId, TelNo, Address, Creator, CreateDate, Updater, UpdateDate)
+      values(@CustomerCode,@CustomerDesc,@CustomerName,@RouteCode,@LicenseNo,@SortId,@TelNo,@Address, @Creator, getdate(), @Updater, getdate())
+    </CommandString>
+  </Command>
+  <Command ID="UpdateCustomer">
+    <CommandString>
+      Update CMD_Customer Set CustomerDesc=@CustomerDesc, CustomerName=@CustomerName, RouteCode=@RouteCode, LicenseNo=@LicenseNo, SortId=@SortId, TelNo=@TelNo, Address=@Address,Updater=@Updater, UpdateDate=getdate() where CustomerCode=@CustomerCode
+    </CommandString>
+  </Command>
+  
+  <!--产品信息-->
+  <Command ID="SelectProduct">
+    <CommandString>
+      select * from V_CMD_Product
+      where {0}
+      order by {1}
+    </CommandString>
+  </Command>
+  <Command ID="DeleteProduct">
+    <CommandString>
+      delete from CMD_PRODUCT WHERE ProductCode in({0})
+    </CommandString>
+  </Command>
+  <Command ID="InsertProduct">
+    <CommandString>
+      INSERT INTO CMD_PRODUCT(ProductCode, ProductName, ShortName, CategoryCode, FactoryID, Province, IsAbnormity, Barcode, BarcodePack, Unit, Length, Width, Height, Status, IsPick,
+      Creator, CreateDate, Updater, UpdateDate)
+      values(@ProductCode, @ProductName, @ShortName, @CategoryCode, @FactoryID, @Province, @IsAbnormity, @Barcode, @BarcodePack, @Unit, @Length, @Width, @Height, @Status, @IsPick,
+      @Creator, getdate(), @Updater, getdate())
+    </CommandString>
+  </Command>
+  <Command ID="UpdateProduct">
+    <CommandString>
+      Update CMD_PRODUCT Set ProductName=@ProductName, ShortName=@ShortName, CategoryCode=@CategoryCode, FactoryID=@FactoryID, Province=@Province, IsAbnormity=@IsAbnormity, Barcode=@Barcode,
+      BarcodePack=@BarcodePack, Unit=@Unit, Length=@Length, Width=@Width, Height=@Height, Status=@Status, IsPick=@IsPick,
+      Updater=@Updater,UpdateDate=getdate() where ProductCode=@ProductCode
+    </CommandString>
+  </Command>
+
+  <Command ID="spBatchChangeProductNo">
+    <CommandString>
+      sp_BatchChangeProductNo
+    </CommandString>
+  </Command>
+
+  
+  
+  <!--生产厂家-->
+  <Command ID="SelectFactory">
+    <CommandString>
+      Select *
+      from CMD_Factory  
+      where {0}
+      order by {1}
+    </CommandString>
+  </Command>
+  <Command ID="DeleteFactory">
+    <CommandString>
+      delete from CMD_Factory WHERE FactoryID in({0})
+    </CommandString>
+  </Command>
+  <Command ID="InsertFactory">
+    <CommandString>
+      INSERT INTO CMD_Factory(FactoryID, Flag,FactoryName, LinkPerson, LinkPhone, Fax, Address, MEMO,Creator, CreateDate, Updater, UpdateDate)
+      values(@FactoryID,@Flag,@FactoryName,@LinkPerson,@LinkPhone,@Fax,@Address,@MEMO, @Creator, getdate(), @Updater, getdate())
+    </CommandString>
+  </Command>
+  <Command ID="UpdateFactory">
+    <CommandString>
+      Update CMD_Factory Set FactoryName=@FactoryName,Flag=@Flag,LinkPerson=@LinkPerson,LinkPhone=@LinkPhone,Fax=@Fax, Address=@Address, MEMO=@MEMO,Updater=@Updater, UpdateDate=getdate() where FactoryID=@FactoryID
+    </CommandString>
+  </Command>
+
+  <!--分拣线资料-->
+  <Command ID="SelectLine">
+    <CommandString>
+      select line.*,a.StateDesc as LineTypeDesc,b.StateDesc as StatusDesc from CMD_LineInfo  Line
+      left join Sys_TableState a on line.LineType=a.State and a.TableName='CMD_LineInfo' and a.FieldName='LineType'
+      left join Sys_TableState b on line.Status=b.State and b.TableName='CMD_LineInfo' and b.FieldName='Status'
+      where {0}
+      order by {1}
+    </CommandString>
+  </Command>
+  <Command ID="UpdateLine">
+    <CommandString>
+      Update CMD_LineInfo Set LineName=@LineName,LineType=@LineType,Status=@Status,Ability=@Ability, ProductTotal=@ProductTotal, PackCapacity=@PackCapacity where LineCode=@LineCode
+    </CommandString>
+  </Command>
+
+
+  <!--仓位资料-->
+  <Command ID="SelectChannel">
+    <CommandString>
+      select ChannelCode, ChannelName, LineCode,ChannelType,'立式机' as ChannelTypeDesc,CMD_Channel.ProductCode,CMD_Channel.Status,
+      (case when CMD_Channel.Status='1' then '启用' else '禁用' end) StatusDesc,ChannelOrder,product.ProductName
+      from CMD_Channel 
+      left join CMD_Product Product on CMD_Channel.ProductCode=Product.ProductCode
+      where {0}
+      order by {1}
+    </CommandString>
+  </Command>
+  <Command ID="UpdateChannel">
+    <CommandString>
+      Update CMD_Channel Set ChannelName=@ChannelName,ProductCode=@ProductCode,ProductName=@ProductName,Status=@Status,ChannelOrder=@ChannelOrder where ChannelCode=@ChannelCode
+    </CommandString>
+  </Command>
+  
+  <!--批次管理-->
+  <Command ID="SelectBatch">
+    <CommandString>
+      select *,case when IsValid='1' then '已优化' else '未优化' end as ValidDesc from CMD_Batch
+      where {0}
+      Order by {1}
+    </CommandString>
+  </Command>
+  
+  
+  <Command ID="SelectBatchBind">
+    <CommandString>
+      SELECT TableName, FieldName, State, StateDesc
+      FROM  Sys_TableState
+      where TableName='CMD_Batch'
+    </CommandString>
+  </Command>
+  <Command ID="InsertBatch">
+    <CommandString>
+      insert into  CMD_Batch(OrderDate, BatchNo, BatchName, IsDownload, IsUpload, IsValid, ScDate)
+      values(@OrderDate, @BatchNo, @BatchNo, 1, 0, 0, getdate())
+    </CommandString>
+  </Command>
+
+  <Command ID="UpdateBatchNotValid">
+    <CommandString>
+      update CMD_Batch set IsValid='0',ValidTime=null,ExecuteUser='',ExecuteIP='',BeginSortTime=null,EndSortTime=null where BatchNo=@BatchNo and IsValid='1'
+    </CommandString>
+  </Command>
+
+  
+
+</SqlCommand>

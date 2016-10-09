@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<publishData>
+  <publishProfile publishUrl="C:\Users\shj\Desktop\CL" deleteExistingFiles="True" ftpAnonymousLogin="False" ftpPassiveMode="True" msdeploySite="" msdeploySiteID="" msdeployRemoteSitePhysicalPath="" msdeployAllowUntrustedCertificate="False" msdeploySkipExtraFilesOnServer="True" msdeployMarkAsApp="False" profileName="Profile1" publishMethod="FileSystem" replaceMatchingFiles="False" userName="" savePWD="False" userPWD="" SelectedForPublish="True">
+    <file relUrl="bin/ServiceHost.dll" publishTime="04/27/2016 08:55:52" />
+    <file relUrl="DB.xml" publishTime="04/11/2016 16:52:42" />
+    <file relUrl="SecurityService.svc" publishTime="04/09/2014 14:57:50" />
+    <file relUrl="BLLBaseService.svc" publishTime="02/17/2016 21:01:36" />
+    <file relUrl="bin/BLL.dll" publishTime="03/17/2016 16:32:51" />
+    <file relUrl="Web.config" publishTime="04/27/2016 09:37:36" />
+    <file relUrl="bin/SQLDAL.dll" publishTime="04/27/2016 08:55:52" />
+    <file relUrl="WMSDataService.asmx" publishTime="02/22/2016 09:15:37" />
+    <file relUrl="bin/IServices.dll" publishTime="03/17/2016 16:32:51" />
+    <file relUrl="bin/Services.dll" publishTime="03/17/2016 16:32:51" />
+    <file relUrl="bin/Util.dll" publishTime="03/25/2016 14:19:14" />
+    <file relUrl="bin/IDAL.dll" publishTime="03/17/2016 16:32:51" />
+  </publishProfile>
+</publishData>

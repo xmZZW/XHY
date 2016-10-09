@@ -1,0 +1,50 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "SortingSystem", ".", "{357A6071-42D6-4B82-A410-4EC215BB267C}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
+		Debug.AspNetCompiler.VirtualPath = "/SortingSystem"
+		Debug.AspNetCompiler.PhysicalPath = "..\SortingSystem\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\SortingSystem\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/SortingSystem"
+		Release.AspNetCompiler.PhysicalPath = "..\SortingSystem\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\SortingSystem\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "8525"
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceHost", "..\ServiceHost\ServiceHost.csproj", "{ABD63901-876D-4F98-8B47-A3EC620DFAE0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SQLDAL", "..\SQLDAL\SQLDAL.csproj", "{3D2E8955-A851-42EC-BE68-F1EB02B7834B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{357A6071-42D6-4B82-A410-4EC215BB267C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{357A6071-42D6-4B82-A410-4EC215BB267C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{357A6071-42D6-4B82-A410-4EC215BB267C}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{357A6071-42D6-4B82-A410-4EC215BB267C}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{ABD63901-876D-4F98-8B47-A3EC620DFAE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABD63901-876D-4F98-8B47-A3EC620DFAE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABD63901-876D-4F98-8B47-A3EC620DFAE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABD63901-876D-4F98-8B47-A3EC620DFAE0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D2E8955-A851-42EC-BE68-F1EB02B7834B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D2E8955-A851-42EC-BE68-F1EB02B7834B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D2E8955-A851-42EC-BE68-F1EB02B7834B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D2E8955-A851-42EC-BE68-F1EB02B7834B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
