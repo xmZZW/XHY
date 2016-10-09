@@ -290,17 +290,9 @@
         <thead>
 		    <tr>
                 <th data-options="field:'CategoryName',width:80">产品类别</th>
-                <th data-options="field:'ShortName',width:160">简称</th>
-                <th data-options="field:'FactoryName',width:150">供应商</th>
-                <th data-options="field:'Province',width:100">省份</th>
-                <th data-options="field:'Unit',width:50">单位</th>
-                <th data-options="field:'AbnormityDesc',width:50">异型</th>
-                <th data-options="field:'PickDesc',width:50">分拣</th>
-                <th data-options="field:'Barcode',width:120">产品条码</th>
-                <th data-options="field:'BarcodePack',width:120">包装条码</th>
-                <th data-options="field:'Length',width:100">长度</th>
-                <th data-options="field:'Width',width:100">宽度</th>
-                <th data-options="field:'Height',width:100">高度</th>
+                <th data-options="field:'ModelNo',width:160">模具编号</th>
+                <th data-options="field:'ProductNo',width:150">父模具编号</th>
+                <th data-options="field:'Description',width:100">客户名称</th>
                 <th data-options="field:'Creator',width:80">建单人员</th>
                 <th data-options="field:'CreateDate',width:120">建单日期</th>
                 <th data-options="field:'Updater',width:80">修改人员</th>
