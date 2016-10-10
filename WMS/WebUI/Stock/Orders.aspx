@@ -367,9 +367,7 @@
             }
         }
 
-        function DblClickRow(rowIndex, rowData) {
-            DblSingleClickRow('SelectCustWin', rowIndex, rowData);
-        }
+      
 
         function BindSelectUrl(objName) {
 

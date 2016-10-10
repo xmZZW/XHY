@@ -126,9 +126,7 @@
 
         }
 
-        function DblClickRow(rowIndex, rowData) {
-            DblSingleClickRow('', rowIndex, rowData);
-        }
+         
 
         function CheckRow(rowIndex, rowData) {
             CheckSelectRow('dg', rowIndex, rowData);
