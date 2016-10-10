@@ -162,7 +162,7 @@
   <!--产品信息-->
   <Command ID="SelectProduct">
     <CommandString>
-      select * from V_CMD_Product
+      select * from CMD_Product
       where {0}
       order by {1}
     </CommandString>
