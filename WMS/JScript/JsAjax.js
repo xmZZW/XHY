@@ -170,13 +170,15 @@ function isObjectValueEqual(a, b) {
 
 var SelectWin;
 var ReturnValue = new Array();
+var WinName;
 function SelectWinShow(objName, title) {
     if (SessionTimeOut(SessionUrl)) {
         return false;
     }
-    BindSelectUrl(objName);
+    WinName = objName;
+    BindSelectUrl(WinName);
     ReturnValue = [];
-    SelectWin = $('#'+objName).window({
+    SelectWin = $('#' + WinName).window({
         modal: true,
         title: title,
         minimizable: false,
@@ -187,10 +189,10 @@ function SelectWinShow(objName, title) {
     });
 }
 
-function closeSelectWin(objName) {
+function closeSelectWin() {
     SelectWin.window('close');
     for (var i = 0; i < ReturnValue.length; i++) {
-        AddRow(objName,ReturnValue[i]);
+        AddRow(WinName, ReturnValue[i]);
     }
     ReturnValue = [];
 
@@ -233,10 +235,10 @@ function SelectCheckRow(rowIndex, rowData) {
 
 
 
-function DblSingleClickRow(objName, rowIndex, rowData) {
+function DblClickRow(rowIndex, rowData) {
     ReturnValue = [];
     SelectWin.window('close');
-    AddRow(objName, rowData);
+    AddRow(WinName, rowData);
 }
 
 function SelectSingleCheckRow(rowIndex, rowData) {

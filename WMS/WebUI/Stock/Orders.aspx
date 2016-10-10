@@ -367,9 +367,7 @@
             }
         }
 
-        function DblClickRow(rowIndex, rowData) {
-            DblSingleClickRow('SelectCustWin', rowIndex, rowData);
-        }
+      
 
         function BindSelectUrl(objName) {
 
@@ -685,7 +683,7 @@
                         <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="ReloadGrid('dgProduct')">查询</a> 
                     </td>
                     <td>
-                         <a href="javascript:void(0)" onclick="closeSelectWin('SelectProductWin')" class="easyui-linkbutton" data-options="iconCls:'icon-return'">取回</a>  
+                         <a href="javascript:void(0)" onclick="closeSelectWin()" class="easyui-linkbutton" data-options="iconCls:'icon-return'">取回</a>  
                     </td>
                 </tr>
             </table>
@@ -728,7 +726,7 @@
                         <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="ReloadGrid('tbCust')">查询</a> 
                     </td>
                     <td>
-                         <a href="javascript:void(0)" onclick="closeSelectWin('SelectCustWin')" class="easyui-linkbutton" data-options="iconCls:'icon-return'">取回</a>  
+                         <a href="javascript:void(0)" onclick="closeSelectWin()" class="easyui-linkbutton" data-options="iconCls:'icon-return'">取回</a>  
                     </td>
                 </tr>
             </table>
