@@ -105,10 +105,10 @@
             }
             $('#fm').form('clear');
             BindDropDownList();
-            SetTexRead('txtCustomerCode');
-            SetTexRead('txtCustomerName');
-            SetTexRead('txtRouteCode');
-            SetTexRead('txtRouteName');
+            SetTextRead('txtCustomerCode');
+            SetTextRead('txtCustomerName');
+            SetTextRead('txtRouteCode');
+            SetTextRead('txtRouteName');
             oldBatchNo = "";
             $('#txtOrderDate').datebox('setValue', new Date().Format("yyyy/MM/dd"));
             $('#dgSubAdd').datagrid('loadData', { total: 0, rows: [] });
@@ -135,10 +135,10 @@
             if (HasExists('CMD_Batch', "BatchNo='" + row.BatchNo + "' and BeginSortTime is not null ", '批次号已经开始分拣，不能修改该批次订单！'))
                 return false;
 
-            SetTexRead('txtCustomerCode');
-            SetTexRead('txtCustomerName');
-            SetTexRead('txtRouteCode');
-            SetTexRead('txtRouteName');
+            SetTextRead('txtCustomerCode');
+            SetTextRead('txtCustomerName');
+            SetTextRead('txtRouteCode');
+            SetTextRead('txtRouteName');
             $("#txtID").textbox('readonly', true);
             $("#txtOrderDate").datebox("readonly", true);
             

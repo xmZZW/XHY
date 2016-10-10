@@ -186,7 +186,7 @@ function SelectWinShow(objName, title) {
         return false;
     }
     WinName = objName;
-    BindSelectUrl(WinName);
+    BindSelectUrl(WinName); //绑定单多选数据源.
     ReturnValue = [];
     SelectWin = $('#' + WinName).window({
         modal: true,
