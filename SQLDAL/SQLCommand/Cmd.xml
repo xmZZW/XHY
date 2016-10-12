@@ -1,10 +1,142 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <SqlCommand>
+  <!--仓库信息-->
+  <Command ID="SelectWarehouse">
+    <CommandString>
+      SELECT * FROM CMD_Warehouse where {0} order by WarehouseCode
+    </CommandString>
+  </Command>
+  <Command ID="DeleteWarehouse">
+    <CommandString>
+      DELETE FROM CMD_WAREHOUSE WHERE WarehouseCode='{0}'
+    </CommandString>
+  </Command>
+  <Command ID="InsertWarehouse">
+    <CommandString>
+      Insert into CMD_WAREHOUSE (WarehouseCode,WarehouseName,MEMO) values(@WarehouseCode,@WarehouseName,@MEMO)
+    </CommandString>
+  </Command>
+  <Command ID="UpdateWarehouse">
+    <CommandString>
+      update CMD_WAREHOUSE set WarehouseCode=@WarehouseCode,WarehouseName=@WarehouseName,MEMO=@MEMO  where WarehouseCode=@WarehouseCode
+    </CommandString>
+  </Command>
+
+
+  <!--库区信息-->
+  <Command ID="SelectArea">
+    <CommandString>
+      SELECT * FROM CMD_Area where {0} order by AreaCode
+    </CommandString>
+  </Command>
+  <Command ID="DeleteArea">
+    <CommandString>
+      delete from CMD_Area WHERE AreaCode='{0}'
+    </CommandString>
+  </Command>
+
+  <Command ID="InsertArea">
+    <CommandString>
+      Insert into CMD_Area(WarehouseCode,AreaCode,AreaName,Memo)
+      values(@WarehouseCode,@AreaCode,@AreaName,@Memo)
+    </CommandString>
+  </Command>
+  <Command ID="UpdateArea">
+    <CommandString>
+      update CMD_Area set AreaName=@AreaName,Memo=@Memo where AreaCode=@AreaCode
+    </CommandString>
+  </Command>
+
+
+  <!--货架信息-->
+  <Command ID="SelectStation">
+    <CommandString>
+      SELECT distinct StationNo FROM CMD_Shelf ORDER BY StationNo
+    </CommandString>
+  </Command>
+  <Command ID="SelectShelf">
+    <CommandString>
+      SELECT * FROM CMD_Shelf where {0} ORDER BY ShelfCode,AreaCode
+    </CommandString>
+  </Command>
+  <Command ID="SelectAisle">
+    <CommandString>
+      SELECT distinct AisleNo FROM CMD_Shelf where {0} ORDER BY AisleNo
+    </CommandString>
+  </Command>
+  <Command ID="DeleteShelf">
+    <CommandString>
+      delete from CMD_Shelf WHERE ShelfCode='{0}'
+    </CommandString>
+  </Command>
+  <Command ID="InsertShelf">
+    <CommandString>
+      Insert into CMD_Shelf (WarehouseCode,AreaCode,ShelfCode,ShelfName,Rows,Columns,Memo,IsActive) values(@WarehouseCode,@AreaCode,@ShelfCode,@ShelfName,@Rows,@Columns,@Memo,@IsActive)
+    </CommandString>
+  </Command>
+  <Command ID="UpdateShelf">
+    <CommandString>
+      update CMD_Shelf set  ShelfName=@ShelfName,Rows=@Rows,Columns=@Columns,WarehouseCode=@WarehouseCode,AreaCode=@AreaCode,IsActive=@IsActive,Memo=@Memo where ShelfCode=@ShelfCode
+    </CommandString>
+  </Command>
+
+
+  <Command ID="SelectCellShelf">
+    <CommandString>
+      SELECT * FROM VCell_CMD_Shelf where {0} ORDER BY ShelfCode,AreaCode
+    </CommandString>
+  </Command>
+
+  <!--货架列信息-->
+  <Command ID="SelectColumn">
+    <CommandString>
+      select distinct CellColumn from CMD_Cell WHERE {0} ORDER BY CellColumn
+    </CommandString>
+  </Command>
+  <!--货位信息-->
+  <Command ID="SelectCell">
+    <CommandString>
+      select * from CMD_Cell WHERE {0} ORDER BY AreaCode,ShelfCode,CellCode
+    </CommandString>
+  </Command>
+  <!--货位信息-->
+  <Command ID="SelectCellByCar">
+    <CommandString>
+      select CMD_Cell.* from CMD_Cell
+      Left Join CMD_Shelf On CMD_Cell.ShelfCode=CMD_Shelf.ShelfCode
+      WHERE {0}
+      ORDER BY CMD_Cell.AreaCode,CMD_Cell.ShelfCode,CMD_Cell.CellCode
+    </CommandString>
+  </Command>
+  <Command ID="DeleteCell">
+    <CommandString>
+      delete from CMD_Cell WHERE CellCode='{0}'
+    </CommandString>
+  </Command>
+  <Command ID="InsertCell">
+    <CommandString>
+      Insert into CMD_Cell(CellCode,CellName,AreaCode,ShelfCode,CellRow,CellColumn,IsActive,IsLock,Memo)
+      values(@CellCode,@CellName,@AreaCode,@ShelfCode,@CellRow,@CellColumn,@IsActive,@IsLock,@Memo)
+    </CommandString>
+  </Command>
+  <Command ID="UpdateCell">
+    <CommandString>
+      update CMD_Cell set AreaCode=@AreaCode,IsActive=@IsActive,Memo=@Memo where {0}
+    </CommandString>
+  </Command>
+  
+  
+
+  
+
+
+
+
   <!--产品类别-->
   <Command ID="SelectProductCategory">
     <CommandString>
       select *
-      from CMD_ProductCategory  
+      from CMD_ProductCategory
       where {0} order by {1}
     </CommandString>
   </Command>
@@ -24,81 +156,6 @@
   <Command ID="DeleteProductCategory">
     <CommandString>
       delete from CMD_ProductCategory where CategoryCode in({0})
-    </CommandString>
-  </Command>
-
-  <!--库区资料-->
-  <Command ID="SelectArea">
-    <CommandString>
-      Select * from CMD_Area where {0} order by {1}
-    </CommandString>
-  </Command>
-  <Command ID="DeleteArea">
-    <CommandString>
-      delete from CMD_Area WHERE AreaCode in({0})
-    </CommandString>
-  </Command>
-  <Command ID="InsertArea">
-    <CommandString>
-      INSERT INTO CMD_Area(AreaCode,AreaName,SortId, Creator, CreateDate, Updater, UpdateDate)
-      values(@AreaCode,@AreaName,@SortId, @Creator, getdate(), @Updater, getdate())
-    </CommandString>
-  </Command>
-  <Command ID="UpdateArea">
-    <CommandString>
-      Update CMD_Area Set AreaName=@AreaName,SortId=@SortId,Updater=@Updater, UpdateDate=getdate() where AreaCode=@AreaCode
-    </CommandString>
-  </Command>
-
-  <!--路线资料-->
-  <Command ID="SelectRoute">
-    <CommandString>
-      select Route.*,Area.AreaName from CMD_Route Route
-      left join CMD_Area Area on Route.AreaCode=Area.AreaCode
-      where {0} order by {1}
-    </CommandString>
-  </Command>
-  <Command ID="DeleteRoute">
-    <CommandString>
-      delete from CMD_Route WHERE RouteCode in({0})
-    </CommandString>
-  </Command>
-  <Command ID="InsertRoute">
-    <CommandString>
-      INSERT INTO CMD_Route(RouteCode, RouteName, VehicleSign, VehicleName, VehicleType, DeliveryMan, AreaCode, SortId, IsSort, Creator, CreateDate, Updater, UpdateDate)
-      values(@RouteCode, @RouteName, @VehicleSign, @VehicleName, @VehicleType, @DeliveryMan, @AreaCode, @SortId, @IsSort,@Creator, getdate(), @Updater, getdate())
-    </CommandString>
-  </Command>
-  <Command ID="UpdateRoute">
-    <CommandString>
-      Update CMD_Route set RouteName=@RouteName, VehicleSign=@VehicleSign, VehicleName=@VehicleName, VehicleType=@VehicleType, DeliveryMan=@DeliveryMan, AreaCode=@AreaCode, SortId=@SortId, IsSort=@IsSort, Updater=@Updater, UpdateDate=getdate() where RouteCode=@RouteCode
-    </CommandString>
-  </Command>
-
-
-  <!--客户资料-->
-  <Command ID="SelectCustomer">
-    <CommandString>
-      Select *
-      from V_CMD_CUSTOMER
-      where {0}
-      order by {1}
-    </CommandString>
-  </Command>
-  <Command ID="DeleteCustomer">
-    <CommandString>
-      delete from CMD_Customer WHERE CustomerCode in({0})
-    </CommandString>
-  </Command>
-  <Command ID="InsertCustomer">
-    <CommandString>
-      INSERT INTO CMD_Customer(CustomerCode, CustomerDesc, CustomerName, RouteCode, LicenseNo, SortId, TelNo, Address, Creator, CreateDate, Updater, UpdateDate)
-      values(@CustomerCode,@CustomerDesc,@CustomerName,@RouteCode,@LicenseNo,@SortId,@TelNo,@Address, @Creator, getdate(), @Updater, getdate())
-    </CommandString>
-  </Command>
-  <Command ID="UpdateCustomer">
-    <CommandString>
-      Update CMD_Customer Set CustomerDesc=@CustomerDesc, CustomerName=@CustomerName, RouteCode=@RouteCode, LicenseNo=@LicenseNo, SortId=@SortId, TelNo=@TelNo, Address=@Address,Updater=@Updater, UpdateDate=getdate() where CustomerCode=@CustomerCode
     </CommandString>
   </Command>
   
@@ -137,8 +194,6 @@
     </CommandString>
   </Command>
 
-  
-  
   <!--生产厂家-->
   <Command ID="SelectFactory">
     <CommandString>
@@ -165,70 +220,31 @@
     </CommandString>
   </Command>
 
-  <!--分拣线资料-->
-  <Command ID="SelectLine">
+  <!--客户资料-->
+  <Command ID="SelectCustomer">
     <CommandString>
-      select line.*,a.StateDesc as LineTypeDesc,b.StateDesc as StatusDesc from CMD_LineInfo  Line
-      left join Sys_TableState a on line.LineType=a.State and a.TableName='CMD_LineInfo' and a.FieldName='LineType'
-      left join Sys_TableState b on line.Status=b.State and b.TableName='CMD_LineInfo' and b.FieldName='Status'
+      Select *
+      from V_CMD_CUSTOMER
       where {0}
       order by {1}
     </CommandString>
   </Command>
-  <Command ID="UpdateLine">
+  <Command ID="DeleteCustomer">
     <CommandString>
-      Update CMD_LineInfo Set LineName=@LineName,LineType=@LineType,Status=@Status,Ability=@Ability, ProductTotal=@ProductTotal, PackCapacity=@PackCapacity where LineCode=@LineCode
+      delete from CMD_Customer WHERE CustomerCode in({0})
+    </CommandString>
+  </Command>
+  <Command ID="InsertCustomer">
+    <CommandString>
+      INSERT INTO CMD_Customer(CustomerCode, CustomerDesc, CustomerName, RouteCode, LicenseNo, SortId, TelNo, Address, Creator, CreateDate, Updater, UpdateDate)
+      values(@CustomerCode,@CustomerDesc,@CustomerName,@RouteCode,@LicenseNo,@SortId,@TelNo,@Address, @Creator, getdate(), @Updater, getdate())
+    </CommandString>
+  </Command>
+  <Command ID="UpdateCustomer">
+    <CommandString>
+      Update CMD_Customer Set CustomerDesc=@CustomerDesc, CustomerName=@CustomerName, RouteCode=@RouteCode, LicenseNo=@LicenseNo, SortId=@SortId, TelNo=@TelNo, Address=@Address,Updater=@Updater, UpdateDate=getdate() where CustomerCode=@CustomerCode
     </CommandString>
   </Command>
 
-
-  <!--仓位资料-->
-  <Command ID="SelectChannel">
-    <CommandString>
-      select ChannelCode, ChannelName, LineCode,ChannelType,'立式机' as ChannelTypeDesc,CMD_Channel.ProductCode,CMD_Channel.Status,
-      (case when CMD_Channel.Status='1' then '启用' else '禁用' end) StatusDesc,ChannelOrder,product.ProductName
-      from CMD_Channel 
-      left join CMD_Product Product on CMD_Channel.ProductCode=Product.ProductCode
-      where {0}
-      order by {1}
-    </CommandString>
-  </Command>
-  <Command ID="UpdateChannel">
-    <CommandString>
-      Update CMD_Channel Set ChannelName=@ChannelName,ProductCode=@ProductCode,ProductName=@ProductName,Status=@Status,ChannelOrder=@ChannelOrder where ChannelCode=@ChannelCode
-    </CommandString>
-  </Command>
-  
-  <!--批次管理-->
-  <Command ID="SelectBatch">
-    <CommandString>
-      select *,case when IsValid='1' then '已优化' else '未优化' end as ValidDesc from CMD_Batch
-      where {0}
-      Order by {1}
-    </CommandString>
-  </Command>
-  
-  
-  <Command ID="SelectBatchBind">
-    <CommandString>
-      SELECT TableName, FieldName, State, StateDesc
-      FROM  Sys_TableState
-      where TableName='CMD_Batch'
-    </CommandString>
-  </Command>
-  <Command ID="InsertBatch">
-    <CommandString>
-      insert into  CMD_Batch(OrderDate, BatchNo, BatchName, IsDownload, IsUpload, IsValid, ScDate)
-      values(@OrderDate, @BatchNo, @BatchNo, 1, 0, 0, getdate())
-    </CommandString>
-  </Command>
-
-  <Command ID="UpdateBatchNotValid">
-    <CommandString>
-      update CMD_Batch set IsValid='0',ValidTime=null,ExecuteUser='',ExecuteIP='',BeginSortTime=null,EndSortTime=null where BatchNo=@BatchNo and IsValid='1'
-    </CommandString>
-  </Command>
-
-  
 
 </SqlCommand>

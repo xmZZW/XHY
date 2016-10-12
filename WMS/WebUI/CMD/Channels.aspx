@@ -126,9 +126,7 @@
 
         }
 
-        function DblClickRow(rowIndex, rowData) {
-            DblSingleClickRow('', rowIndex, rowData);
-        }
+         
 
         function CheckRow(rowIndex, rowData) {
             CheckSelectRow('dg', rowIndex, rowData);
@@ -309,7 +307,7 @@
                         <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="ReloadGrid('dgSelect')">查询</a> 
                     </td>
                     <td>
-                         <a href="javascript:void(0)" onclick="closeSelectWin('SelectWin')" class="easyui-linkbutton" data-options="iconCls:'icon-return'">取回</a>  
+                         <a href="javascript:void(0)" onclick="closeSelectWin()" class="easyui-linkbutton" data-options="iconCls:'icon-return'">取回</a>  
                     </td>
                 </tr>
             </table>

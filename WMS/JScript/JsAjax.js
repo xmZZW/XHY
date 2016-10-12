@@ -1,4 +1,7 @@
 ﻿var BaseUrl = "../../Handler/BaseHandler.ashx";
+
+//绑定下拉控件
+//data:数据源参数,CtlID:控件ID,FieldID:绑定控件值栏位,FieldName:绑定控制显示栏位
 var BindComboList = function ( data, CtlID, FieldID, FieldName) {
     $.ajax({
         type: "post",
@@ -21,7 +24,8 @@ var BindComboList = function ( data, CtlID, FieldID, FieldName) {
         }
     });
 };
-//判断单号是否存在
+//判断表中是否存在
+//Table:表名,Filter:判断条件,MsgInfo:提示内容,当满足条件且MsgInfo!=''时,提示MsgInfo内容.
 var HasExists = function (Table, Filter, MsgInfo) {
     var data = { Action: 'HasExists', Where: Filter, TableName: Table };
     var has = true;
@@ -92,7 +96,7 @@ function SetAutoCodeNewID(ctrlName, Table, Column, where) {
     });
 }
 
-//主要是推荐这个函数。它将jquery系列化后的值转为name:value的形式。
+//将jquery系列化后的值转为name:value的形式。
 var convertArray = function (o) {
     var v = {};
     for (var i in o) {
@@ -105,7 +109,7 @@ var convertArray = function (o) {
     }
     return v;
 };
-
+//将Json 转成String
 var jsonToStr = function (o) {
     var arr = [];
     var fmt = function (s) {
@@ -123,7 +127,7 @@ var jsonToStr = function (o) {
     for (var i in o) arr.push('"' + i + '":' + fmt(o[i]));
     return '{' + arr.join(',') + '}';
 };
-
+//新增时,设置固定栏位(Creator,CreateDate,Updater,UpdateDate)的初始值.
 var SetInitValue = function (User) {
 
     $("#txtCreator").textbox('setValue', User);
@@ -131,6 +135,7 @@ var SetInitValue = function (User) {
     $("#txtUpdater").textbox('setValue', User);
     $("#txtUpdateDate").textbox('setValue', new Date().Format("yyyy/MM/dd"));
 };
+//初始设置固定栏位(Creator,CreateDate,Updater,UpdateDate)为只读
 var SetInitColor = function () {
     $("input", $("#txtCreator").next("span")).addClass("TextRead");
     $("input", $("#txtCreateDate").next("span")).addClass("TextRead");
@@ -138,12 +143,14 @@ var SetInitColor = function () {
     $("input", $("#txtUpdateDate").next("span")).addClass("TextRead");
 };
 
-var SetTexRead = function (ctlName) {
+//设置控件只读,
+//ctlName 控件名称
+var SetTextRead = function (ctlName) {
     $("input", $("#" + ctlName).next("span")).addClass("TextRead");
 }
 
+//判断a,b两个Object是否相等
 function isObjectValueEqual(a, b) {
-
     var aProps = Object.getOwnPropertyNames(a);
     var bProps = Object.getOwnPropertyNames(b);
 
@@ -168,15 +175,20 @@ function isObjectValueEqual(a, b) {
     return true;
 }
 
-var SelectWin;
+var SelectWin; 
 var ReturnValue = new Array();
+var WinName; //弹出框名称
+
+//单多选弹出框显示
+//objName: 弹出窗口的DIV名称,title:弹出窗口标题
 function SelectWinShow(objName, title) {
     if (SessionTimeOut(SessionUrl)) {
         return false;
     }
-    BindSelectUrl(objName);
+    WinName = objName;
+    BindSelectUrl(WinName); //绑定单多选数据源.
     ReturnValue = [];
-    SelectWin = $('#'+objName).window({
+    SelectWin = $('#' + WinName).window({
         modal: true,
         title: title,
         minimizable: false,
@@ -186,16 +198,101 @@ function SelectWinShow(objName, title) {
         shadow: false
     });
 }
-
-function closeSelectWin(objName) {
+//弹出窗口关闭
+function closeSelectWin() {
     SelectWin.window('close');
     for (var i = 0; i < ReturnValue.length; i++) {
-        AddRow(objName,ReturnValue[i]);
+        AddRow(WinName, ReturnValue[i]);
     }
     ReturnValue = [];
 
 
 }
+//选中某行
+function SelectCheckRow(rowIndex, rowData) {
+    var bln = false;
+    for (var i = 0; i < ReturnValue.length; i++) {
+        if (isObjectValueEqual(ReturnValue[i], rowData)) {
+            bln = true;
+            break;
+        }
+    }
+    if (!bln)
+        ReturnValue.push(rowData);
+}
+//取消选中
+function SelectUnCheckRow(rowIndex, rowData) {
+    for (var i = 0; i < ReturnValue.length; i++) {
+        if (isObjectValueEqual(ReturnValue[i], rowData)) {
+            ReturnValue.splice(ReturnValue.indexOf(ReturnValue[i]), 1);
+            break;
+        }
+    }
+}
+
+//单选窗,双击行取回.
+function DblClickRow(rowIndex, rowData) {
+    ReturnValue = [];
+    SelectWin.window('close');
+    AddRow(WinName, rowData);
+}
+//单选窗,选中
+function SelectSingleCheckRow(rowIndex, rowData) {
+    ReturnValue = [];
+    ReturnValue.push(rowData);
+
+}
+//单选窗,取消选中.
+function SelectSingleUnCheckRow(rowIndex, rowData) {
+    ReturnValue = [];
+}
+//选中所有行
+function SelectCheckRowAll(rows) {
+    $.each(rows, function (index, rowData) {
+        var bln = false;
+        for (var i = 0; i < ReturnValue.length; i++) {
+            if (isObjectValueEqual(ReturnValue[i], rowData)) {
+                bln = true;
+                break;
+            }
+        }
+        if (!bln)
+            ReturnValue.push(rowData);
+    });
+
+}
+//所有行取消选中
+function SelectUnCheckRowAll(rows) {
+    $.each(rows, function (index, rowData) {
+        for (var i = 0; i < ReturnValue.length; i++) {
+            if (isObjectValueEqual(ReturnValue[i], rowData)) {
+                ReturnValue.splice(ReturnValue.indexOf(ReturnValue[i]), 1);
+                break;
+            }
+        }
+    });
+
+}
+//单多选界面中,Grid数据加载成功后,判断当前内容是否已经有值选中,主要是换页时,使用.
+function SelectLoadSelectSuccess(data) {
+    if (data) {
+        if (ReturnValue.length > 0) {
+            $.each(data.rows, function (index, rowData) {
+                for (var i = 0; i < ReturnValue.length; i++) {
+                    if (isObjectValueEqual(ReturnValue[i], rowData)) {
+                        $('#dgSelect').datagrid('checkRow', index);
+                        break;
+                    }
+                }
+            });
+        }
+    }
+}
+
+
+
+
+//删除明细,objName:删除明细的控件名称
 function DeleteSubDetail(objName) {
     var checkedItems = $('#' + objName).datagrid('getChecked');
     if (checkedItems.length > 0) {  
@@ -219,85 +316,8 @@ function DeleteSubDetail(objName) {
     }
 }
 
-function SelectCheckRow(rowIndex, rowData) {
-    var bln = false;
-    for (var i = 0; i < ReturnValue.length; i++) {
-        if (isObjectValueEqual(ReturnValue[i], rowData)) {
-            bln = true;
-            break;
-        }
-    }
-    if (!bln)
-        ReturnValue.push(rowData);
-}
-
-
-
-function DblSingleClickRow(objName, rowIndex, rowData) {
-    ReturnValue = [];
-    SelectWin.window('close');
-    AddRow(objName, rowData);
-}
-
-function SelectSingleCheckRow(rowIndex, rowData) {
-    ReturnValue = [];
-    ReturnValue.push(rowData);
-
-}
-function SelectUnCheckRow(rowIndex, rowData) {
-    for (var i = 0; i < ReturnValue.length; i++) {
-        if (isObjectValueEqual(ReturnValue[i], rowData)) {
-            ReturnValue.splice(ReturnValue.indexOf(ReturnValue[i]), 1);
-            break;
-        }
-    }
-}
-function SelectSingleUnCheckRow(rowIndex, rowData) {
-    ReturnValue = [];
-}
-
-function SelectCheckRowAll(rows) {
-    $.each(rows, function (index, rowData) {
-        var bln = false;
-        for (var i = 0; i < ReturnValue.length; i++) {
-            if (isObjectValueEqual(ReturnValue[i], rowData)) {
-                bln = true;
-                break;
-            }
-        }
-        if (!bln)
-            ReturnValue.push(rowData);
-    });
-
-}
-function SelectUnCheckRowAll(rows) {
-    $.each(rows, function (index, rowData) {
-        for (var i = 0; i < ReturnValue.length; i++) {
-            if (isObjectValueEqual(ReturnValue[i], rowData)) {
-                ReturnValue.splice(ReturnValue.indexOf(ReturnValue[i]), 1);
-                break;
-            }
-        }
-    });
-
-}
-function SelectLoadSelectSuccess(data) {
-    if (data) {
-        if (ReturnValue.length > 0) {
-            $.each(data.rows, function (index, rowData) {
-                for (var i = 0; i < ReturnValue.length; i++) {
-                    if (isObjectValueEqual(ReturnValue[i], rowData)) {
-                        $('#dgSelect').datagrid('checkRow', index);
-                        break;
-                    }
-                }
-            });
-        }
-    }
-}
-
 var editIndex = undefined;
-
+// 编辑某行
 function endEditing() {
 
     if (editIndex == undefined) { return true }
@@ -312,6 +332,8 @@ function endEditing() {
     }
 }
 
+//刷新Grid控件
+//objName:Grid控件名称
 function ReloadGrid(objName) {
     if (SessionTimeOut(SessionUrl)) {
         return false;
@@ -321,12 +343,15 @@ function ReloadGrid(objName) {
     $('#' + objName).datagrid('options').queryParams = queryParams;
     $("#" + objName).datagrid('reload');
 }
+//将主表转成JSon格式
 function createParam() {
 
     var query = $("#fm").serializeArray();
     query = convertArray(query);
     return "[" + encodeURIComponent(jsonToStr(query)) + "]";  // JSON.stringify(query);
 };
+
+//将明细转成JSon格式
 function createSubParam() {
     var json = "";
     var rows = $('#dgSubAdd').datagrid('getRows'); // dgPI.datagrid('getChanges');
@@ -343,7 +368,6 @@ function createSubParam() {
 }
 
 //operatorcode,0:新增，1:修改，2：删除,3:打印；5：审核，6：作业
-
 function GetPermisionByFormID(formid, operatorcode) {
     var data = { Action: 'GetPermisionByFormID', FormID: formid, OperatorCode: operatorcode };
     var has = true;
@@ -369,6 +393,7 @@ function GetPermisionByFormID(formid, operatorcode) {
     return has;
 
 }
+//判断Session是否过期,如果过期则跳转到登陆界面,Url:登陆界面连接
 function SessionTimeOut(Url) {
     var data = { Action: 'SessionTimeOut' };
     var has = false;
@@ -400,18 +425,20 @@ function SessionTimeOut(Url) {
     }
 
 }
-
+//栏位排序前判断是否过期
 function BeforeSortColumn(sort, order) {
     if (SessionTimeOut(SessionUrl)) {
         return false;
     }
 }
 
+//勾选当前行时,当前行也选中
 function CheckSelectRow(objname, rowIndex, rowData) {
     $('#' + objname).datagrid('unselectAll');
     $('#' + objname).datagrid('selectRow', rowIndex);
 }
 
+//Tab退出
 function Exit() {
     window.parent.removetab();
     return false;

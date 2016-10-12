@@ -105,10 +105,10 @@
             }
             $('#fm').form('clear');
             BindDropDownList();
-            SetTexRead('txtCustomerCode');
-            SetTexRead('txtCustomerName');
-            SetTexRead('txtRouteCode');
-            SetTexRead('txtRouteName');
+            SetTextRead('txtCustomerCode');
+            SetTextRead('txtCustomerName');
+            SetTextRead('txtRouteCode');
+            SetTextRead('txtRouteName');
             oldBatchNo = "";
             $('#txtOrderDate').datebox('setValue', new Date().Format("yyyy/MM/dd"));
             $('#dgSubAdd').datagrid('loadData', { total: 0, rows: [] });
@@ -135,10 +135,10 @@
             if (HasExists('CMD_Batch', "BatchNo='" + row.BatchNo + "' and BeginSortTime is not null ", '批次号已经开始分拣，不能修改该批次订单！'))
                 return false;
 
-            SetTexRead('txtCustomerCode');
-            SetTexRead('txtCustomerName');
-            SetTexRead('txtRouteCode');
-            SetTexRead('txtRouteName');
+            SetTextRead('txtCustomerCode');
+            SetTextRead('txtCustomerName');
+            SetTextRead('txtRouteCode');
+            SetTextRead('txtRouteName');
             $("#txtID").textbox('readonly', true);
             $("#txtOrderDate").datebox("readonly", true);
             
@@ -367,9 +367,7 @@
             }
         }
 
-        function DblClickRow(rowIndex, rowData) {
-            DblSingleClickRow('SelectCustWin', rowIndex, rowData);
-        }
+      
 
         function BindSelectUrl(objName) {
 
@@ -685,7 +683,7 @@
                         <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="ReloadGrid('dgProduct')">查询</a> 
                     </td>
                     <td>
-                         <a href="javascript:void(0)" onclick="closeSelectWin('SelectProductWin')" class="easyui-linkbutton" data-options="iconCls:'icon-return'">取回</a>  
+                         <a href="javascript:void(0)" onclick="closeSelectWin()" class="easyui-linkbutton" data-options="iconCls:'icon-return'">取回</a>  
                     </td>
                 </tr>
             </table>
@@ -728,7 +726,7 @@
                         <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="ReloadGrid('tbCust')">查询</a> 
                     </td>
                     <td>
-                         <a href="javascript:void(0)" onclick="closeSelectWin('SelectCustWin')" class="easyui-linkbutton" data-options="iconCls:'icon-return'">取回</a>  
+                         <a href="javascript:void(0)" onclick="closeSelectWin()" class="easyui-linkbutton" data-options="iconCls:'icon-return'">取回</a>  
                     </td>
                 </tr>
             </table>

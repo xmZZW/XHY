@@ -76,8 +76,8 @@
             }
             $('#fm').form('clear');
             BindDropDownList();
-            SetTexRead('txtSourceBillNo');
-            SetTexRead('txtTotalQty');
+            SetTextRead('txtSourceBillNo');
+            SetTextRead('txtTotalQty');
             $('#txtBillDate').datebox('setValue', new Date().Format("yyyy/MM/dd"));
             $('#dgSubAdd').datagrid('loadData', { total: 0, rows: [] });
             $('#AddWin').dialog('open').dialog('setTitle', '新增');
@@ -99,9 +99,9 @@
                 return false;
             }
             BindDropDownList();
-            SetTexRead('txtSourceBillNo');
-            SetTexRead('txtSourceBillNo');
-            SetTexRead('txtTotalQty');
+            SetTextRead('txtSourceBillNo');
+            SetTextRead('txtSourceBillNo');
+            SetTextRead('txtTotalQty');
             if (row) {
                 //判断能否编辑
 
