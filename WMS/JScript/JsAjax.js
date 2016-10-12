@@ -205,8 +205,6 @@ function closeSelectWin() {
         AddRow(WinName, ReturnValue[i]);
     }
     ReturnValue = [];
-
-
 }
 //选中某行
 function SelectCheckRow(rowIndex, rowData) {

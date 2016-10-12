@@ -162,7 +162,7 @@
   <!--产品信息-->
   <Command ID="SelectProduct">
     <CommandString>
-      select * from V_CMD_Product
+      select * from CMD_Product
       where {0}
       order by {1}
     </CommandString>
@@ -174,16 +174,13 @@
   </Command>
   <Command ID="InsertProduct">
     <CommandString>
-      INSERT INTO CMD_PRODUCT(ProductCode, ProductName, ShortName, CategoryCode, FactoryID, Province, IsAbnormity, Barcode, BarcodePack, Unit, Length, Width, Height, Status, IsPick,
-      Creator, CreateDate, Updater, UpdateDate)
-      values(@ProductCode, @ProductName, @ShortName, @CategoryCode, @FactoryID, @Province, @IsAbnormity, @Barcode, @BarcodePack, @Unit, @Length, @Width, @Height, @Status, @IsPick,
-      @Creator, getdate(), @Updater, getdate())
+      INSERT INTO CMD_PRODUCT(ProductCode, ProductName, CategoryCode,ModelNo,StandardNo,ProductNo,Description, Creator, CreateDate, Updater, UpdateDate)
+      values(@ProductCode, @ProductName, @CategoryCode,@ModelNo,@StandardNo,@ProductNo,@Description, @Creator, getdate(), @Updater, getdate())
     </CommandString>
   </Command>
   <Command ID="UpdateProduct">
     <CommandString>
-      Update CMD_PRODUCT Set ProductName=@ProductName, ShortName=@ShortName, CategoryCode=@CategoryCode, FactoryID=@FactoryID, Province=@Province, IsAbnormity=@IsAbnormity, Barcode=@Barcode,
-      BarcodePack=@BarcodePack, Unit=@Unit, Length=@Length, Width=@Width, Height=@Height, Status=@Status, IsPick=@IsPick,
+      Update CMD_PRODUCT Set ProductName=@ProductName, CategoryCode=@CategoryCode, ModelNo=@ModelNo, StandardNo=@StandardNo, ProductNo=@ProductNo, Description=@Description,
       Updater=@Updater,UpdateDate=getdate() where ProductCode=@ProductCode
     </CommandString>
   </Command>
