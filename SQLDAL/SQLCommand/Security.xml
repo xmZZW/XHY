@@ -20,7 +20,7 @@
   <Command ID="SelectGroupRole">
     <CommandString>
       select distinct(SubModuleCode),n.FormID,n.SystemName,m.ModuleID,OperatorCode,n.MenuCode,n.MenuTitle,n.MenuParent,
-      n.MenuUrl,n.MenuImage,n2.MenuImage as ParentImage,n.OrderIndex,n.ID, n.OrderText, n.SqlCmdFlag
+      n.MenuUrl,n.OrderIndex,n.ID, n.OrderText, n.SqlCmdFlag
       from sys_GroupOperationList o
       left join sys_ModuleList  m on m.ModuleID=o.ModuleID
       left join sys_GroupList g on g.GroupID=o.GroupID
@@ -35,8 +35,8 @@
   <!--获取用户的快捷桌面-->
   <Command ID="SelectUserQuickDesktop">
     <CommandString>
-      SELECT m.MenuParent,  m.MenuTitle, q.ModuleID, m.MenuImage, m.DestopImage, m.MenuUrl,m.SqlCmdFlag,m.FormID,m.MenuCode,m.IconCls
-      FROM dbo.sys_QuickDestop AS q LEFT OUTER JOIN  dbo.sys_Menu AS m ON q.ModuleID = m.ID
+      SELECT m.MenuParent,  m.MenuTitle, q.ModuleID, m.DestopImage, m.MenuUrl,m.SqlCmdFlag,m.FormID,m.MenuCode,m.IconCls
+      FROM dbo.Sys_QuickDesktop AS q LEFT OUTER JOIN  dbo.sys_Menu AS m ON q.ModuleID = m.ID
       WHERE     (q.UserID =@UserID) and m.IsHide=0 AND (q.ModuleID IN
       (SELECT DISTINCT n.ID
       FROM dbo.sys_GroupOperationList AS o LEFT OUTER JOIN
@@ -50,8 +50,8 @@
 
   <Command ID="SelectUserQuickDesktopByMenuCode">
     <CommandString>
-      SELECT m.MenuParent,  m.MenuTitle, q.ModuleID, m.MenuImage, m.DestopImage, m.MenuUrl,m.SqlCmdFlag,m.FormID, m.MenuCode,m.IconCls
-      FROM dbo.sys_QuickDestop AS q LEFT OUTER JOIN  dbo.sys_Menu AS m ON q.ModuleID = m.ID left join SYS_USERLIST p on q.UserID=p.UserID
+      SELECT m.MenuParent,  m.MenuTitle, q.ModuleID,m.DestopImage, m.MenuUrl,m.SqlCmdFlag,m.FormID, m.MenuCode,m.IconCls
+      FROM dbo.Sys_QuickDesktop AS q LEFT OUTER JOIN  dbo.sys_Menu AS m ON q.ModuleID = m.ID left join SYS_USERLIST p on q.UserID=p.UserID
       WHERE     p.UserName =@UserName and m.IsHide=0 AND (q.ModuleID IN
       (SELECT DISTINCT n.ID
       FROM dbo.sys_GroupOperationList AS o LEFT OUTER JOIN
@@ -174,14 +174,14 @@
   <!--删除快捷方式-->
   <Command ID="DeleteQuickDestop">
     <CommandString>
-      delete from sys_QuickDestop where UserID=@UserID
+      delete from Sys_QuickDesktop where UserID=@UserID
     </CommandString>
   </Command>
 
   <!--设置快捷方式-->
   <Command ID="InsertQuickDestop">
     <CommandString>
-      insert into sys_QuickDestop (UserID,ModuleID) values(@UserID,@ModuleID)
+      insert into Sys_QuickDesktop (UserID,ModuleID) values(@UserID,@ModuleID)
     </CommandString>
   </Command>
 

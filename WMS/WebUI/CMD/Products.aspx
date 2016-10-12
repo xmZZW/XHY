@@ -13,7 +13,7 @@
     <script type="text/javascript" src="../../EasyUI/jquery.min.js"></script>
     <script type="text/javascript" src="../../EasyUI/jquery.easyui.min.js"></script>
     <script type="text/javascript" src="../../EasyUI/locale/easyui-lang-zh_CN.js"></script>
-     <script type="text/javascript" src="../../JScript/JsAjax.js" ></script>
+    <script type="text/javascript" src="../../JScript/JsAjax.js" ></script>
     <script type="text/javascript" language="javascript">
 
         //       $("input",$("#loginName").next("span")).blur(function(){  
@@ -22,43 +22,46 @@
         var url = "../../Handler/BaseHandler.ashx";
         var SessionUrl = '<% =ResolveUrl("~/Login.aspx")%>';
         var FormID = "Product";
-
         function getQueryParams(objname, queryParams) {
             if (objname == "dg") {
                 var Where = "1=1 ";
-                var productcode = $("#txtQueryProductCode").textbox("getValue");
-                var productname = $("#txtQueryProductName").textbox("getValue");
-                var ShortName = $("#txtQueryShortName").textbox("getValue");
-                var Barcode = $("#txtQueryBarcode").textbox("getValue");
+                var productcode = $("#txtQueryProductCodeOne").textbox("getValue");
+                var modelNo = $("#txtQueryModelNo").textbox("getValue");
+                var StandardNo = $("#txtQueryStandardNoOne").textbox("getValue");
+                var ProductName = $("#txtQueryProductName").textbox("getValue");
+                var ProductNo = $("#txtQueryProductNoOne").textbox("getValue");
                 if (productcode != "") {
                     Where += " and productcode like '%" + productcode + "%'";
                 }
-                if (productname != "") {
-                    Where += " and productname like '%" + productname + "%'";
+                if (modelNo != "") {
+                    Where += " and modelNo like '%" + modelNo + "%'";
                 }
-                if (ShortName != "") {
-                    Where += " and ShortName like '%" + ShortName + "%'";
+                if (StandardNo!= "") {
+                    Where += " and StandardNo like '%" + StandardNo + "%'";
                 }
-                if (Barcode != "") {
-                    Where += " and Barcode like '%" + Barcode + "%'";
+                if (ProductName!= "") {
+                    Where += " and ProductName like '%" + ProductName + "%'";
+                }
+                if (ProductNo != "") {
+                    Where += " and ProductNo like '%" + ProductNo + "%'";
                 }
                 queryParams.Where = encodeURIComponent(Where);
             }
             else {
 
                 var Where = "1=1 ";
-                var FactoryID = $("#txtQueryFactoryID").textbox("getValue");
-                var FactoryName = $("#txtQueryFactoryName").textbox("getValue");
-                var LinkPerson = $("#txtQueryLinkPerson").textbox("getValue");
+                var ProductCode = $("#txtQueryProductCodetTwo").textbox("getValue");
+                var ProductNo = $("#txtQueryProductNoTwo").textbox("getValue");
+                var StandardNo = $("#txtQueryStandardNoTwo").textbox("getValue");
 
-                if (FactoryID != "") {
-                    Where += " and FactoryID like '%" + FactoryID + "%'";
+                if (ProductCode != "") {
+                    Where += " and ProductCode like '%" + ProductCode + "%'";
                 }
-                if (FactoryName != "") {
-                    Where += " and FactoryName like '%" + FactoryName + "%'";
+                if (ProductNo != "") {
+                    Where += " and ProductNo like '%" + ProductNo + "%'";
                 }
-                if (LinkPerson != "") {
-                    Where += " and LinkPerson like '%" + LinkPerson + "%'";
+                if (StandardNo != "") {
+                    Where += " and StandardNo like '%" + StandardNo + "%'";
                 }
                 queryParams.Where = encodeURIComponent(Where);
             }
@@ -189,7 +192,7 @@
             }
 
             //判断单号是否存在
-            if (HasExists('cmd_product', "ProductCode='" + $('#txtBatchNewProductCode').textbox('getValue') + "'", '产品编码已经存在，请重新修改！'))
+            if (HasExists('cmd_product', "ProductCode='" + $('#txtBatchNewProductCode').textbox('getValue') + "'", '模具编号已经存在，请重新修改！'))
                 return false;
             var productcode = $('#txtBatchProductCode').textbox('getValue');
             var Newproductcode = $('#txtBatchNewProductCode').textbox('getValue');
@@ -254,16 +257,18 @@
         }
 
         function AddRow(ObjName, RowData) {
-            $('#txtModelNo').val(RowData.ModelNo);
-            $('#txtFactoryID').val(RowData.FactoryID);
-            $('#txtFactoryName').textbox('setValue', RowData.FactoryName);
-            
+            $('#txtModelNo').textbox('setValue', RowData.ProductCode);
+            //$('#txtID').textbox('setValue', RowData.ProductCode);
+            $('#txtProductNo').textbox('setValue', RowData.ProductNo);
+            $('#txtStandardNo').textbox('setValue', RowData.StandardNo);
+        
         }
         function BindSelectUrl(objName) {
+            var WhereProductCode = $("#txtID").textbox("getValue");
             $('#dgSelect').datagrid({
                 url: '../../Handler/BaseHandler.ashx?Action=PageDate&FormID=Product',
                 pageNumber: 1,
-                queryParams: { Where: encodeURIComponent("1=1") }
+                queryParams: { Where: encodeURIComponent("1=1 and ModelNo='' and  ProductCode !='"+ WhereProductCode+"'")}
             });
         }
         
@@ -276,16 +281,17 @@
         <thead data-options="frozen:true">
 			<tr>
 				<th data-options="field:'',checkbox:true"></th> 
-                <th data-options="field:'ModelNo',width:140">模具编号</th>
-		        <th data-options="field:'ProductCode',width:80">产品编码</th>
-                <th data-options="field:'ProductName',width:180">品名</th>
+                <th data-options="field:'ProductCode',width:80">模具编号</th>
+                <th data-options="field:'ModelNo',width:140">父模具编号</th>
+                <th data-options="field:'StandardNo',width:90">托盘编号</th>      
+               
 			</tr>
 		</thead>
         <thead>
 		    <tr>
-                <th data-options="field:'CategoryCode',width:90">产品类别</th>
-                <th data-options="field:'StandardNo',width:90">托盘编号</th>
-                <th data-options="field:'ProductNo',width:130">父模具编号</th>
+                <th data-options="field:'CategoryCode',width:100">产品类别</th>                
+                <th data-options="field:'ProductNo',width:140">产品编号</th>
+                <th data-options="field:'ProductName',width:130">品名</th>
                 <th data-options="field:'Description',width:100">客户名称</th>
                 <th data-options="field:'Creator',width:80">建单人员</th>
                 <th data-options="field:'CreateDate',width:150">建单日期</th>
@@ -299,14 +305,16 @@
         <table style="width:100%">
             <tr>
                 <td>
-                    产品编码
-                    <input id="txtQueryProductCode" class ="easyui-textbox" style="width: 100px" />  
+                    模具编号
+                    <input id="txtQueryProductCodeOne" class ="easyui-textbox" style="width: 100px" />
+                    父模具编号
+                    <input id="txtQueryModelNo" class ="easyui-textbox" style="width: 100px" />
+                    托盘编号
+                    <input id="txtQueryStandardNoOne" class="easyui-textbox" style="width: 100px"/>  
                     品名
                     <input id="txtQueryProductName" class="easyui-textbox" style="width: 100px" /> 
-                    简称  
-                    <input id="txtQueryShortName" class="easyui-textbox"/>   
-                    产品条码
-                     <input id="txtQueryBarcode" class="easyui-textbox"/>
+                    产品编号  
+                    <input id="txtQueryProductNoOne" class="easyui-textbox" style="width: 100px"/>   
                     <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="ReloadGrid('dg')">查询</a> 
                 </td>
                 <td  style="width:*"  align="right">
@@ -325,12 +333,14 @@
         <form id="fm" method="post">
               <table id="Table1" class="maintable"  width="100%" align="center">			
 				<tr>
-                     <td align="center" class="musttitle"style="width:90px"  >
+                      <td align="center" class="musttitle"style="width:90px">
                             模具编号
                     </td>
                     <td  width="176px">
-                     &nbsp;<input id="txtModelNo" name="ModelNo" class="easyui-numberbox" maxlength="20" style="width:160px"/> 
+                            &nbsp;<input id="txtID" name="ProductCode" 
+                                class="easyui-textbox" data-options="required:true" maxlength="20" style="width:160px"/>
                     </td>
+                     
                     <td align="center" class="musttitle"style="width:90px">
                         产品类别 </td>
                     <td width="176px">
@@ -341,23 +351,23 @@
                     </td>
                 </tr>
                 <tr>
-                    <td align="center" class="musttitle"style="width:90px">
-                            产品编码
+                    <td align="center" class="smalltitle"style="width:90px"  >
+                            父模具编号
                     </td>
                     <td  width="176px">
-                            &nbsp;<input id="txtID" name="ProductCode" 
-                                class="easyui-textbox" data-options="required:true" maxlength="20" style="width:160px"/>
+                     &nbsp;<input id="txtModelNo" name="ModelNo" class="easyui-textbox" maxlength="20" style="width:130px"/> 
+                           <input type="button" id="btnProductNo" class="ButtonCss" onclick="SelectWinShow('SelectWin','模具资料--选择')" value="..."/>
                     </td>
                     <td align="center" class="smalltitle"style="width:90px">
                         客户名称</td>
                     <td width="176px">
-                        &nbsp;<input id="Text4" name="Description"class="easyui-numberbox" maxlength="100" style="width:160px"/> 
+                        &nbsp;<input id="txtDescription" name="Description"class="easyui-textbox" maxlength="100" style="width:160px"/> 
                     </td> 
                 </tr>
                 <tr>
                     
                     <td align="center" class="musttitle"style="width:90px"  >
-                           产品名称 
+                           品名 
                     </td>
                     <td  colspan="3">
                             &nbsp;<input id="txtProductName" name="ProductName" data-options="required:true" class="easyui-textbox" 
@@ -370,14 +380,14 @@
                                 托盘编号
                         </td>
                         <td  width="176px">
-                         &nbsp;<input id="txtStandardNo" name="StandardNo" class="easyui-numberbox" maxlength="20" style="width:160px"/> 
+                         &nbsp;<input id="txtStandardNo" name="StandardNo" class="easyui-textbox"  maxlength="30" style="width:160px"/> 
                         </td>
                         <td align="center" class="smalltitle"style="width:90px"  >
-                               父模具编号 
+                               产品编号
                         </td>
                         <td width="176px">
-                            &nbsp;<input id="txtProductNo" name="ProductNo" class="easyui-numberbox" maxlength="20" style="width:128px"/> 
-                                   <input type="button" id="btnProductNo" class="ButtonCss" onclick="SelectWinShow('SelectWin','模具资料--选择')" value="..."/>
+                            &nbsp;<input id="txtProductNo" name="ProductNo" class="easyui-textbox" maxlength="20" style="width:160px"/> 
+                                  
                         </td>             
                 </tr>     
                 <tr>
@@ -386,13 +396,14 @@
                         <td >
                                &nbsp;<input id="txtCreator" class="easyui-textbox" data-options="editable:false" 
                             name="Creator" style="width:160px" /></td>
-                            <td align="center" class="smalltitle"style="width:90px">
-                        修改日期
-                          </td>
-                           <td>
-                               &nbsp;<input id="txtUpdateDate" name="UpdateDate" 
+                        <td align="center" class="smalltitle"style="width:90px">
+                        修改人员
+                    </td>
+                    <td>
+                            &nbsp;<input id="txtUpdater" name="Updater" 
                                 class="easyui-textbox" data-options="editable:false"  style="width:160px"/>
-                          </td>    
+                    </td>
+                             
                 </tr>                  
               <tr>                
                     <td align="center" class="smalltitle"style="width:90px">
@@ -403,13 +414,13 @@
                             name="CreateDate" class="easyui-textbox" data-options="editable:false"  
                             style="width:160px"/>
                     </td>
-                    <td align="center" class="smalltitle"style="width:90px">
-                        修改人员
-                    </td>
-                    <td>
-                            &nbsp;<input id="txtUpdater" name="Updater" 
+                      <td align="center" class="smalltitle"style="width:90px">
+                            修改日期
+                          </td>
+                           <td>
+                               &nbsp;<input id="txtUpdateDate" name="UpdateDate" 
                                 class="easyui-textbox" data-options="editable:false"  style="width:160px"/>
-                    </td>
+                         </td>
              </tr>
              </table>
         </form>
@@ -426,7 +437,7 @@
               <table id="Table2" class="maintable"  width="100%" align="center">			
 				<tr>
                     <td align="center" class="musttitle"style="width:90px">
-                        产品编码 </td>
+                        模具编号</td>
                     <td width="176px">
                         
                         &nbsp;<input id="txtBatchProductCode" name="ProductCode" class="easyui-textbox" 
@@ -437,11 +448,11 @@
                 </tr>
                 <tr>
                     <td align="center" class="musttitle"style="width:90px">
-                            新产品编码
+                            新模具编号
                     </td>
                     <td  width="176px">
                             &nbsp;<input id="txtBatchNewProductCode" name="NewProductCode" 
-                                class="easyui-textbox" data-options="required:true" maxlength="32" 
+                                class="easyui-textbox" data-options="required:true" maxlength="20" 
                                 style="width:172px"/>
                     </td>
                      
@@ -465,10 +476,10 @@
                          pagination:true,pageSize:15, pageList:[15, 20, 30, 50],method:'post',striped:true,fitcolumns:true,toolbar:'#tbSelect',singleSelect:true,selectOnCheck:true,checkOnSelect:true,onCheck:SelectSingleCheckRow,onUncheck:SelectSingleUnCheckRow,onLoadSuccess:SelectLoadSelectSuccess,onDblClickRow:DblClickRow"> 
             <thead>
 			    <tr>
-				    <th data-options="field:'',checkbox:true"></th> 
-                    <th data-options="field:'ModelNo',width:160">模具编号</th>
-		            <th data-options="field:'ProductCode',width:100">产品编码</th>
-                    <th data-options="field:'ProductNo',width:150">父模具编号</th>
+				    <th data-options="field:'',checkbox:true"></th>
+                    <th data-options="field:'ProductCode',width:100">模具编号</th> 
+                    <th data-options="field:'ModelNo',width:160">父模具编号</th>
+                    <th data-options="field:'ProductNo',width:150">产品编号</th>
                     <th data-options="field:'StandardNo',width:100">托盘编号</th>
 			    </tr>
 		    </thead>
@@ -478,12 +489,11 @@
             <table >
                 <tr>
                     <td>
-                        供应商编码
-                        <input id="txtQueryFactoryID" class ="easyui-textbox" style="width: 100px" />  
-                        名称
-                        <input id="txtQueryFactoryName" class="easyui-textbox" style="width: 100px" />   
-                        联系人<input id="txtQueryLinkPerson" class="easyui-textbox"/>   
-                         
+                        模具编号
+                        <input id="txtQueryProductCodetTwo" class ="easyui-textbox" style="width: 100px" />  
+                        产品编号
+                        <input id="txtQueryProductNoTwo" class="easyui-textbox" style="width: 100px" />   
+                        托盘编号<input id="txtQueryStandardNoTwo" class="easyui-textbox"/>   
                         <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="ReloadGrid('dgSelect')">查询</a> 
                     </td>
                     <td>

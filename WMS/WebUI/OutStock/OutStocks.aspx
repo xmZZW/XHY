@@ -12,7 +12,7 @@
     <script type="text/javascript" src="../../EasyUI/jquery.min.js"></script>
     <script type="text/javascript" src="../../EasyUI/jquery.easyui.min.js"></script>
     <script type="text/javascript" src="../../EasyUI/locale/easyui-lang-zh_CN.js"></script>
-        <script type="text/javascript" src="../../JScript/JsAjax.js" ></script>
+    <script type="text/javascript" src="../../JScript/JsAjax.js" ></script>
     <script type="text/javascript" language="javascript">
         //       $("input",$("#loginName").next("span")).blur(function(){  
         //            alert("登录名已存在");  
@@ -249,6 +249,22 @@
         function CheckRow(rowIndex, rowData) {
             CheckSelectRow('dg', rowIndex, rowData);
         }
+
+        function UnCheckRow(rowIndex, rowData) {
+
+
+        }
+        function CheckRowAll(rows) {
+
+
+        }
+        function UnCheckRowAll(rows) {
+
+        
+        }
+        function LoadSelectSuccess(data) { 
+        
+        }
  </script> 
 </head>
 <body>
@@ -407,7 +423,7 @@
            
             <table id="dgSubAdd" class="easyui-datagrid" style="width:100%;height:272px;"
                 data-options="loadMsg: '正在加载数据，请稍等...',rownumbers:true,pagination:false,method:'post',striped:true,fitcolumns:true,singleSelect:true,
-                              selectOnCheck:false,checkOnSelect:false,onClickCell:ClickCell "> 
+                              selectOnCheck:false,checkOnSelect:false"> <!--onClickCell:ClickCell-->
                <thead data-options="frozen:true">
 			        <tr>
                         <th data-options="field:'',checkbox:true"></th> 
