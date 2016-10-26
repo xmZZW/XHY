@@ -124,11 +124,24 @@
       update CMD_Cell set AreaCode=@AreaCode,IsActive=@IsActive,Memo=@Memo where {0}
     </CommandString>
   </Command>
-  
-  
 
-  
 
+  <!--单号类型-->
+  <Command ID="SelectBillType">
+    <CommandString>
+      select *
+      from CMD_BillType
+      where {0} order by {1}
+    </CommandString>
+  </Command>
+
+  <Command ID="SelectProductQty">
+    <CommandString>
+      select *
+      from View_ProductQty
+      where {0} order by {1}
+    </CommandString>
+  </Command>
 
 
 
@@ -162,7 +175,7 @@
   <!--产品信息-->
   <Command ID="SelectProduct">
     <CommandString>
-      select * from CMD_Product
+      select * from CMD_PRODUCT
       where {0}
       order by {1}
     </CommandString>

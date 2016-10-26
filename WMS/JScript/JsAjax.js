@@ -17,7 +17,7 @@ var BindComboList = function ( data, CtlID, FieldID, FieldName) {
                 textField: FieldName
             });
             if (json.rows.length > 0)
-                $('#' + CtlID).combobox('select', eval('json.rows[0].' + FieldID));
+                $('#' + CtlID).combobox('select', eval('json.rows[0].' + FieldID));//eval()把字符串转化为js可执行代码。
         },
         error: function (msg) {
             alert(msg);
@@ -37,12 +37,12 @@ var HasExists = function (Table, Filter, MsgInfo) {
         dataType: "text",
         async: false,
         success: function (data) {
-            if (data == "1") {
+            if (data == "1") {//表示表中有这条数据
                 if (MsgInfo != "")
                     alert(MsgInfo);
                 has = true;
             }
-            else
+            else//没有这条数据。
                 has = false;
         },
         error: function (msg) {
@@ -72,9 +72,9 @@ var SetAutoCodeByTableName = function (ctrlName, Pre, where, Table, ctrl_datetei
             alert(msg);
         }
     });
-
-
 };
+
+
 //获取新编号
 //TableName：表名，ColumnName：栏位，Filter：过滤条件
 function SetAutoCodeNewID(ctrlName, Table, Column, where) {
@@ -206,7 +206,7 @@ function closeSelectWin() {
     }
     ReturnValue = [];
 }
-//选中某行
+//选中某行，保证返回值不重复。
 function SelectCheckRow(rowIndex, rowData) {
     var bln = false;
     for (var i = 0; i < ReturnValue.length; i++) {
@@ -272,6 +272,7 @@ function SelectUnCheckRowAll(rows) {
 
 }
 //单多选界面中,Grid数据加载成功后,判断当前内容是否已经有值选中,主要是换页时,使用.
+//已选中项在换页后还被选中。
 function SelectLoadSelectSuccess(data) {
     if (data) {
         if (ReturnValue.length > 0) {
@@ -294,15 +295,15 @@ function SelectLoadSelectSuccess(data) {
 function DeleteSubDetail(objName) {
     var checkedItems = $('#' + objName).datagrid('getChecked');
     if (checkedItems.length > 0) {  
-        var copyRows = [];
-        for (var j = 0; j < checkedItems.length; j++) {
-            copyRows.push(checkedItems[j]);
-        }
-        for (var i = 0; i < copyRows.length; i++) {
-            var index = $('#' + objName).datagrid('getRowIndex', copyRows[i]);
-            $('#' + objName).datagrid('deleteRow', index);
-        }
-    }
+            var copyRows = [];
+            for (var j = 0; j < checkedItems.length; j++) {
+                copyRows.push(checkedItems[j]);
+            }
+            for (var i = 0; i < copyRows.length; i++) {
+                var index = $('#' + objName).datagrid('getRowIndex', copyRows[i]);
+                $('#' + objName).datagrid('deleteRow', index);
+            }
+     }
     //更新RowID
     var AddRows = $('#' + objName).datagrid('getRows');
     if (AddRows.length > 0) {
@@ -338,7 +339,7 @@ function ReloadGrid(objName) {
     }
     var queryParams = $('#' + objName).datagrid('options').queryParams;
     getQueryParams(objName, queryParams);
-    $('#' + objName).datagrid('options').queryParams = queryParams;
+    $('#' + objName).datagrid('options').queryParams = queryParams; 
     $("#" + objName).datagrid('reload');
 }
 //将主表转成JSon格式

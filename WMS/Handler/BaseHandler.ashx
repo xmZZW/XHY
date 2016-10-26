@@ -64,7 +64,15 @@ public class BaseHandler : IHttpHandler, IRequiresSessionState
             case "SessionTimeOut":
                 strJson = SessionTimeOut(context);
                 break;
-
+            case "OutTaskWork":
+                strJson = OutTaskWork(context);
+                break;
+            case "CheckTaskWork":
+                strJson = CheckTaskWork(context);
+                    break;
+            case "CancelTaskWork":
+                strJson = CancelTaskWork(context);
+                 break;
         }
         context.Response.Clear();
         context.Response.ContentEncoding = System.Text.Encoding.UTF8;
@@ -73,6 +81,79 @@ public class BaseHandler : IHttpHandler, IRequiresSessionState
         context.Response.End();
     }
 
+
+    private string CancelTaskWork(HttpContext context)
+    {
+        JsonResult jr = new JsonResult();
+
+        try
+        {
+            string Comd = context.Request["Comd"].ToString();
+            string BillID = context.Server.UrlDecode(context.Request["Where"].ToString());
+            BLL.BLLBase bll = new BLL.BLLBase();
+            bll.ExecNonQueryTran(Comd, new DataParameter[] { new DataParameter("@BillID", BillID), new DataParameter("@UserName", context.Session["G_user"].ToString()) });
+            jr.status = 1;
+            jr.msg = "取消作业成功！";
+
+        }
+        catch (Exception ex)
+        {
+            jr.status = 0;
+            jr.msg = ex.Message;
+        }
+
+        string strJson = JsonConvert.SerializeObject(jr);
+        return strJson;
+    }
+    
+    
+    private string CheckTaskWork(HttpContext context) 
+    {
+        JsonResult jr = new JsonResult();
+        try
+        {
+            string Comd = context.Request["Comd"].ToString();
+            string where = context.Server.UrlDecode(context.Request["Where"].ToString());
+            BLL.BLLBase bll = new BLL.BLLBase();
+            bll.ExecNonQuery(Comd, new DataParameter[] { new DataParameter("{0}", where), new DataParameter("@Checker", context.Session["G_user"].ToString()) });
+            jr.status = 1;
+            jr.msg = "审核成功！";
+
+        }
+        catch (Exception ex)
+        {
+            jr.status = 0;
+            jr.msg = ex.Message;
+        }
+
+        string strJson = JsonConvert.SerializeObject(jr);
+        return strJson; 
+    }
+    
+    
+    private string OutTaskWork(HttpContext context)
+    {
+        JsonResult jr = new JsonResult();
+
+        try
+        {
+           string Comd = context.Request["Comd"].ToString();
+           string BillID = context.Server.UrlDecode(context.Request["Where"].ToString());
+           BLL.BLLBase bll = new BLL.BLLBase();
+           bll.ExecNonQueryTran(Comd, new DataParameter[] { new DataParameter("@BillID", BillID), new DataParameter("@UserName", context.Session["G_user"].ToString()) });
+           jr.status = 1;
+           jr.msg = "出库作业成功！";
+            
+        }
+        catch (Exception ex)
+        {
+            jr.status = 0;
+            jr.msg = ex.Message;
+        }
+
+        string strJson = JsonConvert.SerializeObject(jr);
+        return strJson;
+    }
     private string Add(HttpContext context)
     {
         JsonResult jr = new JsonResult();
@@ -266,7 +347,7 @@ public class BaseHandler : IHttpHandler, IRequiresSessionState
         return strJson;
     }
 
-    private string EditMainDetail(HttpContext context)
+    private string EditMainDetail(HttpContext context)//过程：主表更新数据，从表先删除再插入数据。
     {
         JsonResult jr = new JsonResult();
 
@@ -286,19 +367,17 @@ public class BaseHandler : IHttpHandler, IRequiresSessionState
             List<string> comds = new List<string>();
             List<DataParameter[]> paras = new List<DataParameter[]>();
 
-            Common.SetPara(MainComd, dtMain, ref comds, ref paras);
+            Common.SetPara(MainComd, dtMain, ref comds, ref paras);//把表格转为命令对应的参数，并把命令和参数加入对应的集合。
             
             
             //删除明细
             comds.Add(SubDelComd);
             paras.Add(new DataParameter[] { new DataParameter("{0}", string.Format("'{0}'", dtMain.Rows[0]["BillID"].ToString())) });
-
-
             Common.SetPara(SubComd, dtSub, ref comds, ref paras);
 
 
             BLL.BLLBase bll = new BLL.BLLBase();
-            bll.ExecTran(comds.ToArray(), paras);
+            bll.ExecTran(comds.ToArray(), paras);//开启事务，执行一组命令。
 
             jr.status = 1;
             jr.msg = "修改成功！";
@@ -318,14 +397,14 @@ public class BaseHandler : IHttpHandler, IRequiresSessionState
         string TableName = context.Request["TableName"].ToString();
         string Where = context.Server.UrlDecode(context.Request["Where"].ToString());
         BLL.BLLBase bll = new BLL.BLLBase();
-        if (bll.GetRowCount(TableName, Where) > 0)
+        if (bll.GetRowCount(TableName, Where) > 0)//获取表中的行数
             return "1";
         else
             return "0";
     }
 
 
-    private string FillDataTable(HttpContext context)
+    private string FillDataTable(HttpContext context)//执行查询
     {
         string Comd = context.Request["Comd"].ToString();
         string Where = context.Server.UrlDecode(context.Request["Where"].ToString());
@@ -338,8 +417,8 @@ public class BaseHandler : IHttpHandler, IRequiresSessionState
 
         return JsonHelper.Dtb2Json(dt, 1);
     }
-
-    private string GetDataPage(HttpContext context)
+    
+    private string GetDataPage(HttpContext context)//分页查询
     {
         string FormID = "";
         if (context.Request["FormID"] != null)
@@ -400,7 +479,6 @@ public class BaseHandler : IHttpHandler, IRequiresSessionState
 
         return strValue;
     }
-
     private string AutoCode(HttpContext context)
     {
         string TableName = context.Request["TableName"].ToString();
@@ -408,9 +486,6 @@ public class BaseHandler : IHttpHandler, IRequiresSessionState
         string Filter = context.Server.UrlDecode(context.Request["Filter"].ToString());
         BLL.BLLBase bll = new BLL.BLLBase();
         string strNewID = bll.GetNewID(TableName, ColumnName, Filter);
-
-
-
         return strNewID;
     }
 
