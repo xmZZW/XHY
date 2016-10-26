@@ -1,24 +1,24 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "SortingSystem", ".", "{357A6071-42D6-4B82-A410-4EC215BB267C}"
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "WMS", ".", "{357A6071-42D6-4B82-A410-4EC215BB267C}"
 	ProjectSection(WebsiteProperties) = preProject
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
 		Debug.AspNetCompiler.VirtualPath = "/SortingSystem"
-		Debug.AspNetCompiler.PhysicalPath = "..\SortingSystem\"
+		Debug.AspNetCompiler.PhysicalPath = "..\WMS\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\SortingSystem\"
 		Debug.AspNetCompiler.Updateable = "true"
 		Debug.AspNetCompiler.ForceOverwrite = "true"
 		Debug.AspNetCompiler.FixedNames = "false"
 		Debug.AspNetCompiler.Debug = "True"
 		Release.AspNetCompiler.VirtualPath = "/SortingSystem"
-		Release.AspNetCompiler.PhysicalPath = "..\SortingSystem\"
+		Release.AspNetCompiler.PhysicalPath = "..\WMS\"
 		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\SortingSystem\"
 		Release.AspNetCompiler.Updateable = "true"
 		Release.AspNetCompiler.ForceOverwrite = "true"
 		Release.AspNetCompiler.FixedNames = "false"
 		Release.AspNetCompiler.Debug = "False"
-		VWDPort = "8525"
+		VWDPort = "40879"
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceHost", "..\ServiceHost\ServiceHost.csproj", "{ABD63901-876D-4F98-8B47-A3EC620DFAE0}"

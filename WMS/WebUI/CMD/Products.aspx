@@ -22,6 +22,7 @@
         var url = "../../Handler/BaseHandler.ashx";
         var SessionUrl = '<% =ResolveUrl("~/Login.aspx")%>';
         var FormID = "Product";
+        var OldStandardNoValue;
         function getQueryParams(objname, queryParams) {
             if (objname == "dg") {
                 var Where = "1=1 ";
@@ -107,9 +108,9 @@
                 var data = { Action: 'FillDataTable', Comd: 'cmd.SelectProduct', Where: "ProductCode='" + row.ProductCode + "'" };
                 $.post(url, data, function (result) {
                     var Product = result.rows[0];
+                    OldStandardNoValue=Product.StandardNo;
                     $('#AddWin').dialog('open').dialog('setTitle', '产品资料--编辑');
                     $('#fm').form('load', Product);
-
                 }, 'json');
             }
             $('#txtPageState').val("Edit");
@@ -153,11 +154,47 @@
             var query = createParam();
             var test = $('#txtPageState').val();
             var data;
+            var ModelNoValue = $('#txtModelNo').textbox('getValue');
+            var StandardNoValue = $('#txtStandardNo').textbox('getValue');
+            if(ModelNoValue!='')
+            {
+                    if (!HasExists('cmd_product', "ProductCode='" + $('#txtModelNo').textbox('getValue') + "' and ModelNo=''",''))
+                         {
+                             alert('父模具编号不符合规范，无法保存！');
+                              return false;
+                         }
+             }
+             if(ModelNoValue=='')
+             {
+                  $('#txtStandardNo').textbox('setValue','');
+             }else{
+                if(StandardNoValue=="")
+                {
+                    alert('托盘编号不能为空！');
+                    return false;
+                }else{
+                          if(!HasExists('CMD_Cell',"CellCode='"+StandardNoValue+"' and IsTurnOver='0'",''))
+                          {
+                                alert('该托盘编号找不到相应的货位！');
+                                return false;
+                          }
+                     }
+               
+             }
             if (test == "Add") {
+             
                 //判断单号是否存在
                 if (HasExists('cmd_product', "ProductCode='" + $('#txtID').textbox('getValue') + "'", '产品编码已经存在，请重新修改！'))
                     return false;
-                data = { Action: 'Add', Comd: 'cmd.InsertProduct', json: query };
+
+                if(StandardNoValue!=''){
+                       if (HasExists('CMD_Cell',"PalletCode='"+StandardNoValue+"'",'该托盘已在货位上!'))
+                       {        
+                            $('#txtStandardNo').textbox('setValue', StandardNoValue);
+                               return false;
+                       }
+                   }
+               data = { Action: 'Add', Comd: 'cmd.InsertProduct', json: query };
                 $.post(url, data, function (result) {
                     if (result.status == 1) {
                         ReloadGrid('dg');
@@ -169,7 +206,21 @@
                 }, 'json');
 
             }
-            else {
+            else {//修改
+                  if(OldStandardNoValue!=''){
+                       if (HasExists('CMD_Cell',"PalletCode='"+OldStandardNoValue+"'",'该旧托盘已在货位上!'))
+                       {
+                           $('#txtStandardNo').textbox('setValue', OldStandardNoValue);
+                             return false;
+                       }
+                   }
+                   if(StandardNoValue!=''){
+                       if (HasExists('CMD_Cell',"PalletCode='"+StandardNoValue+"'",'该新托盘已在货位上!'))
+                       {
+                            $('#txtStandardNo').textbox('setValue', StandardNoValue);  
+                               return false;
+                       }
+                   }               
                 data = { Action: 'Edit', Comd: 'cmd.UpdateProduct', json: query };
                 $.post(url, data, function (result) {
                     if (result.status == 1) {
@@ -180,7 +231,6 @@
                         $.messager.alert('错误', result.msg, 'error');
                     }
                 }, 'json');
-
             }
         }
         function BatchSave() {
@@ -192,7 +242,7 @@
             }
 
             //判断单号是否存在
-            if (HasExists('cmd_product', "ProductCode='" + $('#txtBatchNewProductCode').textbox('getValue') + "'", '模具编号已经存在，请重新修改！'))
+            if (HasExists('cmd_product', "ProductCode='" + $('#txtBatchNewProductCode').textbox('getValue') + "'", '产品编号已经存在，请重新修改！'))
                 return false;
             var productcode = $('#txtBatchProductCode').textbox('getValue');
             var Newproductcode = $('#txtBatchNewProductCode').textbox('getValue');
@@ -205,10 +255,6 @@
                     $.messager.alert('错误', result.msg, 'error');
                 }
             }, 'json');
-
-
-
-
         }
         //删除管理员
         function Delete() {
@@ -268,11 +314,12 @@
             $('#dgSelect').datagrid({
                 url: '../../Handler/BaseHandler.ashx?Action=PageDate&FormID=Product',
                 pageNumber: 1,
-                queryParams: { Where: encodeURIComponent("1=1 and ModelNo='' and  ProductCode !='"+ WhereProductCode+"'")}
+                queryParams: { Where: encodeURIComponent("1=1 and ModelNo='' and  ProductCode !='" + WhereProductCode + "'") },
+                //接收返回的数据。
             });
         }
         
- </script> 
+    </script> 
 </head>
 <body class="easyui-layout">
     <table id="dg"  class="easyui-datagrid" 
@@ -365,14 +412,12 @@
                     </td> 
                 </tr>
                 <tr>
-                    
                     <td align="center" class="musttitle"style="width:90px"  >
                            品名 
                     </td>
                     <td  colspan="3">
                             &nbsp;<input id="txtProductName" name="ProductName" data-options="required:true" class="easyui-textbox" 
                                 maxlength="50" style="width:430px"/>
-
                     </td>            
                 </tr>
                  <tr>
@@ -380,7 +425,7 @@
                                 托盘编号
                         </td>
                         <td  width="176px">
-                         &nbsp;<input id="txtStandardNo" name="StandardNo" class="easyui-textbox"  maxlength="30" style="width:160px"/> 
+                         &nbsp;<input id="txtStandardNo" name="StandardNo" class="easyui-textbox"  maxlength="30" style="width:160px"/>
                         </td>
                         <td align="center" class="smalltitle"style="width:90px"  >
                                产品编号
@@ -454,13 +499,8 @@
                             &nbsp;<input id="txtBatchNewProductCode" name="NewProductCode" 
                                 class="easyui-textbox" data-options="required:true" maxlength="20" 
                                 style="width:172px"/>
-                    </td>
-                     
-                </tr>
-                	
-		   
-          
-             
+                    </td>                    
+                </tr>            
              </table>
         </form>
     </div>

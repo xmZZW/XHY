@@ -38,6 +38,22 @@
     </CommandString>
   </Command>
 
+  <Command ID="SelectBillMaster">
+    <CommandString>
+      select * from WMS_BillMaster
+      where {0}
+      order by {1}
+    </CommandString>
+  </Command>
+
+  <Command ID="SelectBillDetail">
+    <CommandString>
+      select * from View_BillDetailProduct
+      where {0}
+      order by {1}
+    </CommandString>
+  </Command>
+
   <Command ID="InsertOrderDetail">
     <CommandString>
       insert into SC_I_ORDERDETAIL( OrderId, RowID, ProductCode, ProductName, Quantity, OrderDate, DeliveryDate, BatchNo, Price, Amount, Memo)
@@ -51,4 +67,58 @@
     </CommandString>
   </Command>
 
+  <Command ID="DeleteBillMaster">
+    <CommandString>
+      delete from  WMS_BillMaster where BillId in ({0})
+    </CommandString>
+  </Command>
+  <Command ID="DeleteBillDetail">
+    <CommandString>
+      delete from WMS_BillDetail  where BillId in ({0})
+    </CommandString>
+  </Command>
+
+  <Command ID="UpdateCheckBillMaster">
+    <CommandString>
+      update WMS_BillMaster set Checker=@Checker,CheckDate=getdate(),State='1'  where {0}
+    </CommandString>
+  </Command>
+  
+  <Command ID="SpOutStockTask">
+    <CommandString>
+      Sp_OutstockTask
+    </CommandString>
+  </Command>
+
+  <Command ID="SpCancelOutstockTask">
+    <CommandString>
+     Sp_OutstockCancelTask
+    </CommandString>
+  </Command>
+  
+  <Command ID="InsertOutStockBill">
+    <CommandString>
+      insert into WMS_BillMaster(BillID, BillDate,  BillTypeCode,Memo,Creator, CreateDate, Updater, UpdateDate)
+      values( @BillID,@BillDate, @BillTypeCode,@Memo,@Creator, getdate(), @Updater, getdate())
+    </CommandString>
+  </Command>
+  
+  <Command ID="InsertOutStockDetail">
+    <CommandString>
+      insert into WMS_BillDetail(BillID,RowID, ProductCode,Quantity,Memo)
+      values(@BillID,@RowID, @ProductCode,@Quantity,@Memo)
+    </CommandString>
+  </Command>
+  
+  <Command ID="UpdateOutStock">
+    <CommandString>
+      update WMS_BillMaster set BillDate=@BillDate, BillTypeCode=@BillTypeCode , Memo=@Memo, Updater=@Updater, UpdateDate=getdate() where BillID=@BillID
+    </CommandString>
+  </Command>
+  
+  <Command ID="DeleteBillDetail">
+    <CommandString>
+      delete from  WMS_BillDetail  where BillID in ({0})
+    </CommandString>
+  </Command>
 </SqlCommand>
