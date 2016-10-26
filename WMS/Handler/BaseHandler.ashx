@@ -61,6 +61,10 @@ public class BaseHandler : IHttpHandler, IRequiresSessionState
             case "HasExists":
                 strJson = HasExists(context);
                 break;
+            case "GetFieldValue":
+                strJson = GetFieldValue(context);
+                break;
+                
             case "SessionTimeOut":
                 strJson = SessionTimeOut(context);
                 break;
@@ -401,6 +405,16 @@ public class BaseHandler : IHttpHandler, IRequiresSessionState
             return "1";
         else
             return "0";
+    }
+
+    public string GetFieldValue(HttpContext context)
+    {
+        string TableName = context.Request["TableName"].ToString();
+        string Where = context.Server.UrlDecode(context.Request["Where"].ToString());
+        string Field = context.Request["FieldName"].ToString();
+        BLL.BLLBase bll = new BLL.BLLBase();
+        return bll.GetFieldValue(TableName, Field, Where);
+             
     }
 
 

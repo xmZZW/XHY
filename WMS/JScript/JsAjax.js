@@ -53,6 +53,28 @@ var HasExists = function (Table, Filter, MsgInfo) {
     return has;
 };
 
+
+var GetFieldValue = function (Table, FieldName, Filter) {
+    var data = { Action: 'GetFieldValue', Where: Filter, TableName: Table, FieldName: FieldName };
+    var Value = "";
+    $.ajax({
+        type: "post",
+        url: BaseUrl,
+        data: data,
+        // contentType: "application/json; charset=utf-8",
+        dataType: "text",
+        async: false,
+        success: function (data) {
+            Value = data;
+        },
+        error: function (msg) {
+            alert(msg);
+            Value = "";
+        }
+    });
+    return Value;
+};
+
  
 //根据日期，获取新编号
 //ctrlName:单号控件名称， PreName:单号前缀，Filter：过滤条件，TableName：表名，ctrl_dateteime：日期控件
