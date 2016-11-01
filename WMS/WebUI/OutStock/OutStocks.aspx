@@ -16,6 +16,7 @@
     <script type="text/javascript" src="../../JScript/JsAjax.js" ></script>
     <script type="text/javascript" language="javascript">
         var url = "../../Handler/BaseHandler.ashx";
+        var urlOther = "../../Handler/OtherHandler.ashx";
         var SessionUrl = '<% =ResolveUrl("~/Login.aspx")%>';
         var BaseWhere = encodeURIComponent("BillID like 'OS%'");
 
@@ -50,7 +51,7 @@
          //选择表绑定数据
          function BindSelectUrl(objName) {
 
-             var Comd = "CMD.SelectProduct";
+             var Comd = "CMD.SelectProductQty";
              $('#dgSelect').datagrid({
                  url: '../../Handler/BaseHandler.ashx?Action=PageDate&Comd=' + Comd,
                  pageNumber: 1,
@@ -146,7 +147,8 @@
                 return false;
             }
             var row = $('#dg').datagrid('getSelected');
-            if (HasExists('WMS_BillMaster', "BillID='" + row.BillID + "'and State=4", '出库单号已完成，无法修改！'))
+            var StateDes = GetFieldValue("View_WMS_BillMaster", "StateDesc", "BillID='" +row.BillID + "'");
+            if (HasExists('WMS_BillMaster', "BillID='" + row.BillID + "'and State!=0", "出库单号 " + row.BillID + "已" + StateDes + ",无法修改！"))
                 return false;
             BindDropDownList();
             if (row) {
@@ -180,53 +182,59 @@
                  $.messager.alert("提示", "请选择要删除的行！", "info");  
                  return false;
              }
+
             if (checkedItems) {
                 $.messager.confirm('提示', '你确定要删除吗？', function (r) {
-                    if (r)
-                     {
-                            var deleteCode = [];
-                            var blnUsed = false;
-                            $.each(checkedItems, function (index, item) {
-                                    if (HasExists('VUsed_WMS_BillMaster', "BillID='" + item.BillID + "'", "出库单号 " + item.BillID + " 已经被其它单据使用，无法删除！"))
+                    if (r) {
+                        var deleteCode = [];
+                        var blnUsed = false;
+                        $.each(checkedItems, function (index, item) {
+                            var StateDes = GetFieldValue("View_WMS_BillMaster", "StateDesc", "BillID='" + item.BillID + "'");
+                            if (HasExists('WMS_BillMaster', "BillID='" + item.BillID + "'and State!=0", "出库单号 " + item.BillID + "已" + StateDes + ",无法删除！")) {
+                                  blnUsed = true;
+                            } else {
+                                if (HasExists('VUsed_WMS_BillMaster', "BillID='" + item.BillID + "'", "出库单号 " + item.BillID + " 已经被其它单据使用，无法删除！"))
                                         blnUsed = true;
+                            }
+                            deleteCode.push(item.BillID);
+                        });
+                        if (blnUsed)
+                            return false;
 
-                                    deleteCode.push(item.BillID);
-                            });
-                            if (blnUsed)
-                                return false;
+                        var data = { Action: 'DelMainDetail', MainComd: 'WMS.DeleteBillMaster', SubComd: "WMS.DeleteBillDetail", json: "'" + deleteCode.join("','") + "'" };
+                        $.post(url, data, function (result) {
+                            if (result.status == 1) {
+                                ReloadGrid("dg");
 
-                             var data = { Action: 'DelMainDetail', MainComd: 'WMS.DeleteBillMaster', SubComd: "WMS.DeleteBillDetail", json: "'" + deleteCode.join("','") + "'" };
-                            $.post(url, data, function (result) {
-                                if (result.status == 1) {
-                                    ReloadGrid("dg");
 
-                                
-                                } else {
-                                    $.messager.alert('错误', result.msg, 'error');
-                                }
-                            }, 'json');
-                   }
+                            } else {
+                                $.messager.alert('错误', result.msg, 'error');
+                            }
+                        }, 'json');
+                    }
                 });
             }
             }
          
         function CheckBill() {
             var checkRow = $('#dg').datagrid('getSelected');
-            var BillID = checkRow.BillID;
             if (checkRow) {
-                var state = checkRow.State;
+                var BillID = checkRow.BillID;
+                var state =GetFieldValue("WMS_BillMaster", "State", "BillID='" + BillID + "'");
                 if ( state == 1) {
                     $.messager.alert("提示", BillID + "单号已审核!", "info");
                     return false;
                 }
-                if (state > 1 ) {
-                    $.messager.alert("提示", BillID + "单号已作业，无法再审核!", "info");
+                if (state > 1) {
+                    var StateDes = GetFieldValue("View_WMS_BillMaster", "StateDesc", "BillID='" + BillID + "'");
+                    $.messager.alert("提示", BillID + "单号已" + StateDes + "，无法再审核!", "info");
                     return false;
                 }
                 var data = { Action: 'CheckTaskWork', Comd: "WMS.UpdateCheckBillMaster", Where: "BillID='" + BillID + "'" };
-                $.post(url, data, function (result) {
+                $.post(urlOther, data, function (result) {
                     if (result.status == 1) {
                         $.messager.alert('成功', result.msg, 'info');
+                        ReloadGrid("dg");
                     } else {
                         $.messager.alert('错误', result.msg, 'error');
                     }
@@ -239,21 +247,23 @@
         }
         function OutWork() {
             var checkRow = $('#dg').datagrid('getSelected');
-            var BillID = checkRow.BillID;
             if (checkRow) {
-                var state = checkRow.State;
-                if (state==0) {
+                var BillID = checkRow.BillID;
+                var state = GetFieldValue("WMS_BillMaster", "State", "BillID='" + BillID + "'");
+                if (state == 0) {
                     $.messager.alert("提示", BillID + "单号还未审核不能作业，请审核后，再进行出库作业。", "info");
                     return false;
                 }
-                if (state>1) {
-                    $.messager.alert("提示", BillID + "单号已经作业，不能再进行出库作业。", "info");
+                if (state > 1) {
+                    var StateDes = GetFieldValue("View_WMS_BillMaster", "StateDesc", "BillID='" + BillID + "'");
+                    $.messager.alert("提示", BillID + "单号已"+StateDes+"，不能再进行出库作业。", "info");
                     return false;
                 }
-                var data = { Action: 'OutTaskWork', Comd: "WMS.SpOutStockTask", Where: "'" + BillID + "'" };
-                $.post(url, data, function (result) {
+                var data = { Action: 'OutTaskWork', Comd: "WMS.SpOutStockTask", Where: BillID };
+                $.post(urlOther, data, function (result) {
                     if (result.status == 1) {
-                        $.messager.alert('成功', result.msg, 'info');
+                    $.messager.alert('成功', result.msg, 'info');
+                    ReloadGrid("dg");
                     } else {
                         $.messager.alert('错误', result.msg, 'error');
                     }
@@ -265,21 +275,23 @@
        }
         function CancelWork() {
             var checkRow = $('#dg').datagrid('getSelected');
-            var BillID = checkRow.BillID;
             if (checkRow) {
-                var state = checkRow.State;
-                if (state >2) {
-                    $.messager.alert("提示", BillID + "单号已经执行，不能再进行取消作业。", "info");
+                var BillID = checkRow.BillID;
+                var state = GetFieldValue("WMS_BillMaster", "State", "BillID='" + BillID + "'");
+                if (state > 2) {
+                    var StateDes = GetFieldValue("View_WMS_BillMaster", "StateDesc", "BillID='" + BillID + "'");
+                    $.messager.alert("提示", BillID + "单号已"+StateDes+"，不能再进行取消作业。", "info");
                     return false;
                 }
                 if (state<2) {
                     $.messager.alert("提示", BillID + "单号还未作业，不能进行取消作业。", "info");
                     return false;
                 }
-                var data = { Action: 'CancelTaskWork', Comd: "WMS.SpCancelOutstockTask", Where: "'" + BillID + "'" };
-                $.post(url, data, function (result) {
+                var data = { Action: 'CancelTaskWork', Comd: "WMS.SpCancelOutstockTask", Where:  BillID };
+                $.post(urlOther, data, function (result) {
                     if (result.status == 1) {
                         $.messager.alert('成功', result.msg, 'info');
+                        ReloadGrid("dg");
                     } else {
                         $.messager.alert('错误', result.msg, 'error');
                     }
@@ -326,6 +338,7 @@
                         <th data-options="field:'',checkbox:true"></th> 
 		                <th data-options="field:'BillID',width:150">出库单号</th>
                         <th data-options="field:'BillDate',width:150">日期</th>
+                        <th data-options="field:'StateDesc',width:100">状态</th>
                         <th data-options="field:'Memo',width:100">备注</th>
                     </tr>
                   </thead>

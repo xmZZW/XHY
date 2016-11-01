@@ -40,7 +40,7 @@
 
   <Command ID="SelectBillMaster">
     <CommandString>
-      select * from WMS_BillMaster
+      select * from View_WMS_BillMaster
       where {0}
       order by {1}
     </CommandString>
@@ -92,7 +92,7 @@
 
   <Command ID="SpCancelOutstockTask">
     <CommandString>
-     Sp_OutstockCancelTask
+      Sp_OutstockCancelTask
     </CommandString>
   </Command>
   

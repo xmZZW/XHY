@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Cars.aspx.cs" Inherits="WebUI_CMD_Cars" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Cranes.aspx.cs" Inherits="WebUI_CMD_Cranes" %>
 
 <!DOCTYPE html>
 
@@ -21,25 +21,21 @@
         //        })
         var url = "../../Handler/BaseHandler.ashx";
         var SessionUrl = '<% =ResolveUrl("~/Login.aspx")%>';
-        var FormID = "Car";
+        var FormID = "Crane";
 
         function getQueryParams(objname, queryParams) {
             var Where = "1=1 ";
-            var CarNo = $("#txtQueryCarID").textbox("getValue");
-            var CarName = $("#txtQueryCarName").textbox("getValue");
+            var CraneNo = $("#txtQueryCraneID").textbox("getValue");
+            var CraneName = $("#txtQueryCraneName").textbox("getValue");
             var StateDesc = $("#txtQueryState").textbox("getValue");
-            var StationNo = $("#txtQueryStationNo").textbox("getValue");
-            if (CarNo != "") {
-                Where += " and CarNo  like '%" + CarNo + "%'";
+            if (CraneNo != "") {
+                Where += " and CraneNo like '%" + CraneNo + "%'";
             }
-            if (CarName != "") {
-                Where += " and CarName like '%" + CarName + "%'";
+            if (CraneName != "") {
+                Where += " and CraneName like '%" + CraneName + "%'";
             }
             if (StateDesc != "") {
                 Where += " and StateDesc like '%" + StateDesc + "%'";
-            }
-            if (StationNo != "") {
-                Where += " and StationNo like '%" + StationNo + "%'";
             }
 
             queryParams.Where = encodeURIComponent(Where);
@@ -52,14 +48,14 @@
             if (SessionTimeOut(SessionUrl)) {
                 return false;
             }
-            /* if (!GetPermisionByFormID("Car", 0)) {
-            alert("您没有新增权限！");
-            return false;
+           /* if (!GetPermisionByFormID("Crane", 0)) {
+                alert("您没有新增权限！");
+                  return false;
             }*/
             $('#fm').form('clear');
             BindDropDownList();
             $('#AddWin').dialog('open').dialog('setTitle', '堆垛机--新增');
-            SetAutoCodeNewID('txtID', 'CMD_Car', 'CarNo', '1=1');
+            SetAutoCodeNewID('txtID', 'CMD_Crane', 'CraneNo', '1=1');
             $('#txtPageState').val("Add");
             $("#txtID").textbox('readonly', false);
         }
@@ -68,9 +64,9 @@
             if (SessionTimeOut(SessionUrl)) {
                 return false;
             }
-            /* if (!GetPermisionByFormID("Crane", 1)) {
-            alert("您没有修改权限！");
-            return false;
+           /* if (!GetPermisionByFormID("Crane", 1)) {
+                alert("您没有修改权限！");
+                return false;
             }*/
             var row = $('#dg').datagrid('getSelected');
             if (row == null || row.length == 0) {
@@ -79,10 +75,10 @@
             }
             BindDropDownList();
             if (row) {
-                var data = { Action: 'FillDataTable', Comd: 'cmd.SelectCar', Where: "CarNo='" + row.CarNo + "'" };
+                var data = { Action: 'FillDataTable', Comd: 'cmd.SelectCrane', Where: "CraneNo='" + row.CraneNo + "'" };
                 $.post(url, data, function (result) {
                     var Product = result.rows[0];
-                    $('#AddWin').dialog('open').dialog('setTitle', '小车--编辑');
+                    $('#AddWin').dialog('open').dialog('setTitle', '堆垛机--编辑');
                     $('#fm').form('load', Product);
 
                 }, 'json');
@@ -110,9 +106,9 @@
             var data;
             if (test == "Add") {
                 //判断单号是否存在
-                if (HasExists('CMD_Car ', "CarNo='" + $('#txtID').textbox('getValue') + "'", '小车编号已经存在，请重新修改！'))
+                if (HasExists('CMD_Crane ', "CraneNo='" + $('#txtID').textbox('getValue') + "'", '堆垛机编号已经存在，请重新修改！'))
                     return false;
-                data = { Action: 'Add', Comd: 'cmd.InsertCar', json: query };
+                data = { Action: 'Add', Comd: 'cmd.InsertCrane', json: query };
                 $.post(url, data, function (result) {
                     if (result.status == 1) {
                         ReloadGrid('dg');
@@ -125,7 +121,7 @@
 
             }
             else {
-                data = { Action: 'Edit', Comd: 'cmd.UpdateCar', json: query };
+                data = { Action: 'Edit', Comd: 'cmd.UpdateCrane', json: query };
                 $.post(url, data, function (result) {
                     if (result.status == 1) {
                         ReloadGrid('dg');
@@ -144,8 +140,8 @@
                 return false;
             }
             /*if (!GetPermisionByFormID("Factory", 2)) {
-            alert("您没有删除权限！");
-            return false;
+                alert("您没有删除权限！");
+                return false;
             }*/
             var checkedItems = $('#dg').datagrid('getChecked');
             if (checkedItems == null || checkedItems.length == 0) {
@@ -158,13 +154,13 @@
                         var deleteCode = [];
                         var blnUsed = false;
                         $.each(checkedItems, function (index, item) {
-                            if (HasExists('VUsed_CMD_Car', "CarNo='" + item.CarNo + "'", "小车编号 " + item.CarNo + " 已经被其它单据使用，无法删除！"))
+                            if (HasExists('VUsed_CMD_Crane', "CraneNo='" + item.CraneNo + "'", "堆垛机编号 " + item.CraneNo + " 已经被其它单据使用，无法删除！"))
                                 blnUsed = true;
-                            deleteCode.push(item.CarNo);
+                            deleteCode.push(item.CraneNo);
                         });
                         if (blnUsed)
                             return false;
-                        var data = { Action: 'Delete', FormID: FormID, Comd: 'cmd.DeleteCar', json: "'" + deleteCode.join("','") + "'" };
+                        var data = { Action: 'Delete', FormID: FormID, Comd: 'cmd.DeleteCrane', json: "'" + deleteCode.join("','") + "'" };
                         $.post(url, data, function (result) {
                             if (result.status == 1) {
                                 ReloadGrid('dg');
@@ -174,7 +170,7 @@
                                 $.messager.alert('错误', result.msg, 'error');
                             }
                         }, 'json');
-                    }
+                   }
                 });
             }
         }
@@ -190,11 +186,9 @@
         <thead>
 		    <tr>
                 <th data-options="field:'',checkbox:true"></th> 
-		        <th data-options="field:'CarNo',width:80">小车编号</th>
-                <th data-options="field:'CarName',width:100">名称</th>
+		        <th data-options="field:'CraneNo',width:80">堆垛机编号</th>
+                <th data-options="field:'CraneName',width:100">名称</th>
                 <th data-options="field:'StateDesc',width:80">状态</th>
-                <th data-options="field:'CraneNo',width:100">堆垛机</th>
-                <th data-options="field:'StationNo',width:80">站台编号</th>
                 <th data-options="field:'Memo',width:100">备注</th>
 		    </tr>
         </thead>
@@ -204,22 +198,20 @@
         <table style="width:100%" >
             <tr>
                 <td>
-                    小车编号
-                    <input id="txtQueryCarID" class ="easyui-textbox" style="width: 100px" />  
+                    堆垛机编号
+                    <input id="txtQueryCraneID" class ="easyui-textbox" style="width: 100px" />  
                     名称
-                    <input id="txtQueryCarName" class="easyui-textbox" style="width: 100px" /> 
+                    <input id="txtQueryCraneName" class="easyui-textbox" style="width: 100px" /> 
                     状态
                     <input id="txtQueryState" class="easyui-textbox" style="width: 100px" />
-                     站台编号
-                    <input id="txtQueryStationNo" class="easyui-textbox" style="width: 100px" />
                     &nbsp;&nbsp;
-                    <a href="#" onclick="ReloadGrid('dg')" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a> 
+                    <a href="#" onclick="ReloadGrid('dg')"  class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a> 
                 </td>
                 <td style="width:*" align="right">
-                     <a href="javascript:void(0)"  onclick="Add()" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true">新增</a>  
-                     <a href="javascript:void(0)"  onclick="Edit()" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true">修改</a>  
+                     <a href="javascript:void(0)"  onclick="Add()"  class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true">新增</a>  
+                     <a href="javascript:void(0)"  onclick="Edit()"  class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true">修改</a>  
                      <a href="javascript:void(0)"  onclick="Delete()" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true">删除</a>
-                     <a href="javascript:void(0)"  onclick="Exit()" class="easyui-linkbutton" data-options="iconCls:'icon-no',plain:true">离开</a>
+                     <a href="javascript:void(0)"  onclick="Exit()"class="easyui-linkbutton" data-options="iconCls:'icon-no',plain:true">离开</a>
                 </td>
             </tr>
         </table>
@@ -230,21 +222,19 @@
         <form id="fm" method="post">
               <table id="Table1" class="maintable"  width="100%" align="center">			
 				<tr>
-                    
                     <td align="center" class="musttitle"style="width:90px">
-                            小车编号
+                            堆垛机编号
                     </td>
                     <td  width="210px">
-                            &nbsp;<input id="txtID" name="CarNo" 
+                            &nbsp;<input id="txtID" name="CraneNo" 
                                 class="easyui-textbox" data-options="required:true" maxlength="2" style="width:180px"/>
                                 <input name="PageState" id="txtPageState" type="hidden" />
-                                <input name="Flag" id="txtFlag" type="hidden" value="1"   />
                     </td>
                     <td align="center" class="musttitle"style="width:90px"  >
                            名称
                     </td>
                     <td width="210px"> 
-                        &nbsp;<input id="txtCarName" name="CarName" class="easyui-textbox" data-options="required:true" maxlength="20" style="width:180px"/>
+                        &nbsp;<input id="txtCraneName" name="CraneName" class="easyui-textbox" data-options="required:true" maxlength="20" style="width:180px"/>
                     </td>
                 </tr>
                 <tr>
@@ -252,25 +242,14 @@
                             状态
                     </td>
                     <td  width="210px">
-                            &nbsp;<input id="ddlState" name="State" class="easyui-combobox" data-options="required:true,editable:false"  style="width:180px"/> 
+                            &nbsp;<input id="ddlState" name="State" class="easyui-combobox" data-options="required:true,editable:false" style="width:180px"/> 
                     </td>
-                     <td align="center" class="musttitle"style="width:90px">
-                            堆垛机
-                    </td>
-                    <td  width="210px">
-                            &nbsp;<input id="Text1" name="CraneNo" class="easyui-textbox" data-options="required:true"  style="width:180px"/> 
-                    </td>
-                </tr>
-                <tr>
-                    <td align="center" class="smalltitle"style="width:90px"  >
-                         站台编号   
+
+                     <td align="center" class="smalltitle"style="width:90px"  >
+                            
                     </td>
                     <td width="210px"> 
-                       &nbsp;<input id="txtStationNo" name="StationNo" class="easyui-textbox"  maxlength="10" style="width:180px"/>
-                    </td>
-                    <td align="center" class="smalltitle"style="width:90px"  > 
-                    </td>
-                    <td width="210px"> 
+                       
                     </td>
                 </tr>
                 <tr style=" height:80px">
@@ -279,7 +258,7 @@
                     </td>
                     <td colspan="3" style="height:80px;">
                        &nbsp;<input 
-                            id="txtMemo" name="Memo" maxlength="500" class="easyui-textbox" 
+                            id="txtMemo" name="Memo" class="easyui-textbox" 
                             data-options="multiline:true" style="width:478px; height:72px"/>
 
                     </td>
@@ -289,7 +268,7 @@
     </div>
     <div id="AddWinBtn">
         <a href="#" onclick="Save()" class="easyui-linkbutton" data-options="iconCls:'icon-ok'">保存</a>
-        <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="javascript:$('#AddWin').dialog('close')">关闭</a>
+        <a href="#" onclick="javascript:$('#AddWin').dialog('close')" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="javascript:$('#AddWin').dialog('close')">关闭</a>
     </div>
 
 </body>

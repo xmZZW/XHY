@@ -68,15 +68,7 @@ public class BaseHandler : IHttpHandler, IRequiresSessionState
             case "SessionTimeOut":
                 strJson = SessionTimeOut(context);
                 break;
-            case "OutTaskWork":
-                strJson = OutTaskWork(context);
-                break;
-            case "CheckTaskWork":
-                strJson = CheckTaskWork(context);
-                    break;
-            case "CancelTaskWork":
-                strJson = CancelTaskWork(context);
-                 break;
+            
         }
         context.Response.Clear();
         context.Response.ContentEncoding = System.Text.Encoding.UTF8;
@@ -86,78 +78,7 @@ public class BaseHandler : IHttpHandler, IRequiresSessionState
     }
 
 
-    private string CancelTaskWork(HttpContext context)
-    {
-        JsonResult jr = new JsonResult();
-
-        try
-        {
-            string Comd = context.Request["Comd"].ToString();
-            string BillID = context.Server.UrlDecode(context.Request["Where"].ToString());
-            BLL.BLLBase bll = new BLL.BLLBase();
-            bll.ExecNonQueryTran(Comd, new DataParameter[] { new DataParameter("@BillID", BillID), new DataParameter("@UserName", context.Session["G_user"].ToString()) });
-            jr.status = 1;
-            jr.msg = "取消作业成功！";
-
-        }
-        catch (Exception ex)
-        {
-            jr.status = 0;
-            jr.msg = ex.Message;
-        }
-
-        string strJson = JsonConvert.SerializeObject(jr);
-        return strJson;
-    }
-    
-    
-    private string CheckTaskWork(HttpContext context) 
-    {
-        JsonResult jr = new JsonResult();
-        try
-        {
-            string Comd = context.Request["Comd"].ToString();
-            string where = context.Server.UrlDecode(context.Request["Where"].ToString());
-            BLL.BLLBase bll = new BLL.BLLBase();
-            bll.ExecNonQuery(Comd, new DataParameter[] { new DataParameter("{0}", where), new DataParameter("@Checker", context.Session["G_user"].ToString()) });
-            jr.status = 1;
-            jr.msg = "审核成功！";
-
-        }
-        catch (Exception ex)
-        {
-            jr.status = 0;
-            jr.msg = ex.Message;
-        }
-
-        string strJson = JsonConvert.SerializeObject(jr);
-        return strJson; 
-    }
-    
-    
-    private string OutTaskWork(HttpContext context)
-    {
-        JsonResult jr = new JsonResult();
-
-        try
-        {
-           string Comd = context.Request["Comd"].ToString();
-           string BillID = context.Server.UrlDecode(context.Request["Where"].ToString());
-           BLL.BLLBase bll = new BLL.BLLBase();
-           bll.ExecNonQueryTran(Comd, new DataParameter[] { new DataParameter("@BillID", BillID), new DataParameter("@UserName", context.Session["G_user"].ToString()) });
-           jr.status = 1;
-           jr.msg = "出库作业成功！";
-            
-        }
-        catch (Exception ex)
-        {
-            jr.status = 0;
-            jr.msg = ex.Message;
-        }
-
-        string strJson = JsonConvert.SerializeObject(jr);
-        return strJson;
-    }
+   
     private string Add(HttpContext context)
     {
         JsonResult jr = new JsonResult();

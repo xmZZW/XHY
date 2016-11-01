@@ -256,5 +256,65 @@
     </CommandString>
   </Command>
 
-
+  <!--小车资料-->
+  <Command ID="SelectCar">
+    <CommandString>
+      select CarNo,CarName,Car.State,CraneNo,Memo,StationNo,StateDesc from CMD_Car Car inner join(select * from  Sys_TableState  where TableName='CMD_Car')as tmp on Car.State=tmp.State
+      where {0}
+      order by {1}
+    </CommandString>
+  </Command>
+  <Command ID="DeleteCar">
+    <CommandString>
+      delete from CMD_Car  WHERE  CarNo in({0})
+    </CommandString>
+  </Command>
+  <Command ID="InsertCar">
+    <CommandString>
+      INSERT INTO CMD_Car (CarNo,CarName,State,Memo,StationNo,CraneNo)
+      values(@CarNo,@CarName,@State,@Memo,@StationNo,@CraneNo)
+    </CommandString>
+  </Command>
+  <Command ID="UpdateCar">
+    <CommandString>
+      Update CMD_Car Set CarName=@CarName,State=@State,Memo=@Memo,StationNo=@StationNo,CraneNo=@CraneNo where CarNo=@CarNo
+    </CommandString>
+  </Command>
+  
+  
+  
+  <!--堆垛机资料-->
+  <Command ID="SelectCrane">
+    <CommandString>
+      select CraneNo,CraneName,Crane.State,Memo,StateDesc from CMD_Crane Crane inner join(select * from  Sys_TableState  where TableName='CMD_Crane')as tmp on Crane.State=tmp.State
+      where {0}
+      order by {1}
+    </CommandString>
+  </Command>
+  <Command ID="DeleteCrane">
+    <CommandString>
+      delete from CMD_Crane  WHERE  CraneNo in({0})
+    </CommandString>
+  </Command>
+  <Command ID="InsertCrane">
+    <CommandString>
+      INSERT INTO CMD_Crane (CraneNo,CraneName,State,Memo)
+      values(@CraneNo,@CraneName,@State,@Memo)
+    </CommandString>
+  </Command>
+  <Command ID="UpdateCrane">
+    <CommandString>
+      Update CMD_Crane Set CraneName=@CraneName,State=@State, Memo=@Memo where CraneNo=@CraneNo
+    </CommandString>
+  </Command> 
+  
+  <!--状态信息-->
+  <Command ID="SelecState">
+    <CommandString>
+      Select *
+      from Sys_TableState
+      where {0}
+      order by {1}
+    </CommandString>
+  </Command>
 </SqlCommand>
