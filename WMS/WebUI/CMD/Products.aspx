@@ -304,7 +304,6 @@
 
         function AddRow(ObjName, RowData) {
             $('#txtModelNo').textbox('setValue', RowData.ProductCode);
-            //$('#txtID').textbox('setValue', RowData.ProductCode);
             $('#txtProductNo').textbox('setValue', RowData.ProductNo);
             $('#txtStandardNo').textbox('setValue', RowData.StandardNo);
         
@@ -314,8 +313,7 @@
             $('#dgSelect').datagrid({
                 url: '../../Handler/BaseHandler.ashx?Action=PageDate&FormID=Product',
                 pageNumber: 1,
-                queryParams: { Where: encodeURIComponent("1=1 and ModelNo='' and  ProductCode !='" + WhereProductCode + "'") },
-                //接收返回的数据。
+                queryParams: { Where: encodeURIComponent("1=1 and ModelNo='' and  ProductCode !='" + WhereProductCode + "'") }
             });
         }
         
